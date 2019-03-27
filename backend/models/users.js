@@ -35,14 +35,24 @@ self.getUser = function(username){
     });
 }
 
-self.updateUser = function(username,newusername,password){
+self.updateUser = function(username,newusername,password=''){
     client = this;
     return new Promise(function(resolve,reject){
-        const query = {
-            text:   `update users
-                    set username = $1, password = $2,
-                    where username = $3`,
-            values: [newusername,bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),username],
+        var query;
+        if (!password){
+            query = {
+                text:   `update users
+                        set username = $1, password = $2
+                        where username = $3`,
+                values: [newusername,bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),username],
+            }
+        } else {
+            query = {
+                text:   `update users
+                        set username = $1
+                        where username = $2`,
+                values: [newusername,username],
+            }
         }
         client.query(query)
         .then(res => {

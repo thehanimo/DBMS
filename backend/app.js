@@ -23,6 +23,8 @@ db.getUser('hani')
   })
   .catch(e => console.log(e));
 */
+//db.updateUser('hani','hanimo')
+//db.deleteUser('hani')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
