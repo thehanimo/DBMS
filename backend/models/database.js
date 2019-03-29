@@ -75,6 +75,7 @@ client.setup = function() {
 client.connect();
 client.insertUser = users.insertUser;
 client.getUser = users.getUser;
+client.getUserByEmail = users.getUserByEmail;
 client.updateUser = users.updateUser;
 client.deleteUser = users.deleteUser;
 client.comparePassword = users.comparePassword;

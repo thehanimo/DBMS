@@ -13,6 +13,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LandingComponent } from './landing/landing.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { LandingComponent } from './landing/landing.component';
     LoginComponent,
     HomeComponent,
     ProfileComponent,
-    LandingComponent
+    LandingComponent,
+    RegisterComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

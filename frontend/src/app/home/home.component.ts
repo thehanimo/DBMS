@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { User, UserProfile } from '@/_models';
 import { UserService, AuthenticationService } from '@/_services';
-import * as profileValidators from './profile-validators';
+import * as customValidators from '@/custom-validators';
 
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent {
@@ -30,9 +30,9 @@ export class HomeComponent {
 
     ngOnInit() {
         this.profileForm = this.formBuilder.group({
-            firstname: ['', [Validators.required,profileValidators.nameValidator()]],
-            lastname: ['', [Validators.required,profileValidators.nameValidator()]],
-            phone: ['',[Validators.required,profileValidators.phoneValidator()]],
+            firstname: ['', [Validators.required,customValidators.nameValidator()]],
+            lastname: ['', [Validators.required,customValidators.nameValidator()]],
+            phone: ['',[Validators.required,customValidators.phoneValidator()]],
             address: ['',Validators.required],
             picture: [this.picture]
         });

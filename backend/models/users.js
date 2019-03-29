@@ -8,12 +8,12 @@ self.insertUser = function(username,password,email,role='1'){
     return new Promise(function(resolve,reject){
         const query = {
             text:   `insert into users(username,password,email,role)
-                    values ($1,$2,$3,$4)`,
+                    values ($1,$2,$3,$4) returning *`,
             values: [username,bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),email,role],
         }
         client.query(query)
         .then(res => {
-            resolve(client.getUser(username))
+            resolve(res.rows[0])
         })
         .catch(e => reject(e))
     });
@@ -26,6 +26,22 @@ self.getUser = function(username){
             text:   `select * from users
                     where username = $1`,
             values: [username],
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows[0]);
+        })
+        .catch(e => reject(e))
+    });
+}
+
+self.getUserByEmail = function(email){
+    client = this;
+    return new Promise(function(resolve,reject){
+        const query = {
+            text:   `select * from users
+                    where email = $1`,
+            values: [email],
         }
         client.query(query)
         .then(res => {

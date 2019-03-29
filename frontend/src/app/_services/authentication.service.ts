@@ -38,4 +38,18 @@ export class AuthenticationService {
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
     }
+
+    register(username: string, email: string, password: string) {
+        return this.http.post<any>(`http://localhost:3000/api/signup`, { username, email, password })
+            .pipe(map(user => {
+                // login successful if there's a jwt token in the response
+                if (user && user.token) {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    this.currentUserSubject.next(user);
+                }
+
+                return user;
+            }));
+    }
 }
