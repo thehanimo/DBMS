@@ -15,16 +15,21 @@ var app = express();
 
 const db = require('./models/database');
 db.setup()
-//db.insertUser('hani','password');
-/*
-db.getUser('hani')
-  .then(resolve => {
-    console.log(resolve)
-  })
-  .catch(e => console.log(e));
-*/
-//db.updateUser('hani','hanimo')
-//db.deleteUser('hani')
+//db.insertUserProfile('hanimo','email@','firstname','lastname','phone','address');
+//db.deleteUser('hanimo')
+// db.insertUser('hani','password','hani.mohammed.3@gmail.com','2')
+// db.getUsers()
+//   .then(resolve => {
+//     console.log(resolve)
+//   })
+//   .catch(e => console.log(e));
+
+// db.updateUserProfile('email',{
+//   lastname:'mohammed',
+//   firstname:'hani',
+//   phone: '+919840794287'
+// })
+// db.deleteUserProfile('hani')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,8 +37,8 @@ app.set('view engine', 'ejs');
 
 app.use(cors({credentials: true, origin: true}))
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

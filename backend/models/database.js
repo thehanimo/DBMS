@@ -1,5 +1,6 @@
 const { Client } = require('pg');
 const users = require('./users');
+const userProfile = require('./userProfile');
 const client = new Client({
     user: 'dbms',
     host: 'localhost',
@@ -12,7 +13,9 @@ client.setup = function() {
     const query = {
         text: `create table if not exists users(
             id serial,
+            isActive boolean default false,
             username varchar(255) primary key,
+            email varchar(255) NOT NULL UNIQUE,
             password varchar(10000) not null,
             role varchar(2) default '1',
             created timestamp,
@@ -48,7 +51,19 @@ client.setup = function() {
             create trigger add_modified_timestamp
             before update on users
             for each row
-            execute procedure modified_timestamp();`,
+            execute procedure modified_timestamp();
+            
+            CREATE TABLE if not exists userProfile (
+                username varchar(255),
+                firstname varchar(255) NOT NULL,
+                lastname varchar(255) NOT NULL,
+                phone varchar(255) NOT NULL,
+                address varchar(1000) NOT NULL,
+                pictureurl varchar(500),
+                PRIMARY KEY (username),
+                FOREIGN KEY (username) REFERENCES users (username)
+               );
+            `,
     }
     this.query(query)
     .then(res => {
@@ -63,4 +78,10 @@ client.getUser = users.getUser;
 client.updateUser = users.updateUser;
 client.deleteUser = users.deleteUser;
 client.comparePassword = users.comparePassword;
+
+client.insertUserProfile = userProfile.insertUserProfile;
+client.getUserProfile = userProfile.getUserProfile;
+client.updateUserProfile = userProfile.updateUserProfile;
+client.deleteUserProfile = userProfile.deleteUserProfile;
+client.getUsers = users.getUsers;
 module.exports = client;

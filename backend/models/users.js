@@ -3,13 +3,13 @@ var bcrypt = require('bcrypt-nodejs');
 
 
 
-self.insertUser = function(username,password){
+self.insertUser = function(username,password,email,role='1'){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {
-            text:   `insert into users(username,password)
-                    values ($1,$2)`,
-            values: [username,bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)],
+            text:   `insert into users(username,password,email,role)
+                    values ($1,$2,$3,$4)`,
+            values: [username,bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),email,role],
         }
         client.query(query)
         .then(res => {
@@ -30,6 +30,20 @@ self.getUser = function(username){
         client.query(query)
         .then(res => {
             resolve(res.rows[0]);
+        })
+        .catch(e => reject(e))
+    });
+}
+
+self.getUsers = function(){
+    client = this;
+    return new Promise(function(resolve,reject){
+        const query = {
+            text:   `select * from users`
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows);
         })
         .catch(e => reject(e))
     });
