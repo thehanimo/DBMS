@@ -11,9 +11,10 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import { ProfileComponent } from './profile/profile.component';
 import { LandingComponent } from './landing/landing.component';
 import { RegisterComponent } from './register/register.component';
+import { VerificationComponent } from './verification/verification.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @NgModule({
   imports: [
@@ -26,9 +27,10 @@ import { RegisterComponent } from './register/register.component';
     AppComponent,
     LoginComponent,
     HomeComponent,
-    ProfileComponent,
     LandingComponent,
-    RegisterComponent
+    RegisterComponent,
+    VerificationComponent,
+    ChangePasswordComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

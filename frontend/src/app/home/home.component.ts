@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { User, UserProfile } from '@/_models';
+import { User } from '@/_models';
 import { UserService, AuthenticationService } from '@/_services';
 import * as customValidators from '@/custom-validators';
 

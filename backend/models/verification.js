@@ -1,0 +1,47 @@
+var self = this;
+
+self.insertNewToken = function(username, token){
+    client = this;
+    return new Promise(function(resolve,reject){
+        const query = {
+            text:   `insert into verification(username,token)
+                    values ($1,$2) returning *`,
+            values: [username,token],
+        }
+        client.query(query)
+        .then(res => {
+            resolve()
+        })
+        .catch(e => reject(e))
+    });
+}
+
+self.verifyToken = function(token){
+    client = this;
+    return new Promise(function(resolve,reject){
+        const query = {
+            text:   `select * from verification
+                    where token = $1`,
+            values: [token],
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows[0])
+        })
+        .catch(e => reject(e))
+    });
+}
+self.verified = function(username){
+    client = this;
+    return new Promise(function(resolve,reject){
+        const query = {
+            text:   `delete from verification
+                    where username = $1`,
+            values: [username],
+        }
+        client.query(query)
+        .then(resolve())
+        .catch(e => reject(e))
+    });
+}
+module.exports = self;

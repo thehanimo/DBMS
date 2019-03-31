@@ -1,6 +1,7 @@
 const { Client } = require('pg');
 const users = require('./users');
 const userProfile = require('./userProfile');
+const verification = require('./verification');
 const client = new Client({
     user: 'dbms',
     host: 'localhost',
@@ -63,6 +64,13 @@ client.setup = function() {
                 PRIMARY KEY (username),
                 FOREIGN KEY (username) REFERENCES users (username)
                );
+
+            CREATE TABLE if not exists verification (
+            username varchar(255),
+            token varchar(1000),
+            PRIMARY KEY (token),
+            FOREIGN KEY (username) REFERENCES users (username)
+            );
             `,
     }
     this.query(query)
@@ -75,14 +83,21 @@ client.setup = function() {
 client.connect();
 client.insertUser = users.insertUser;
 client.getUser = users.getUser;
+client.getUnverifiedUser = users.getUnverifiedUser;
 client.getUserByEmail = users.getUserByEmail;
 client.updateUser = users.updateUser;
 client.deleteUser = users.deleteUser;
 client.comparePassword = users.comparePassword;
+client.changePassword = users.changePassword;
 
 client.insertUserProfile = userProfile.insertUserProfile;
 client.getUserProfile = userProfile.getUserProfile;
 client.updateUserProfile = userProfile.updateUserProfile;
 client.deleteUserProfile = userProfile.deleteUserProfile;
 client.getUsers = users.getUsers;
+client.setActive = users.setActive;
+
+client.insertNewToken = verification.insertNewToken;
+client.verifyToken = verification.verifyToken;
+client.verified = verification.verified;
 module.exports = client;

@@ -5,12 +5,20 @@ import { RegisterComponent } from './register';
 import { HomeComponent } from './home';
 import { LandingComponent } from './landing';
 import { AuthGuard } from './_guards';
+import { VerificationComponent } from './verification';
+import { ChangePasswordComponent } from './change-password';
 import { Role } from './_models';
+import { from } from 'rxjs';
 
 const appRoutes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'home/changePassword',
+        component: ChangePasswordComponent,
         canActivate: [AuthGuard]
     },
     {
@@ -20,6 +28,10 @@ const appRoutes: Routes = [
     {
         path: 'register',
         component: RegisterComponent
+    },
+    {
+        path: 'confirmation/:token',
+        component: VerificationComponent
     },
     {
         path: '',
