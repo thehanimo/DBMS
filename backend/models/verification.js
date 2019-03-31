@@ -1,12 +1,12 @@
 var self = this;
 
-self.insertNewToken = function(username, token){
+self.insertNewToken = function(username, token,type){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {
-            text:   `insert into verification(username,token)
-                    values ($1,$2) returning *`,
-            values: [username,token],
+            text:   `insert into verification(username,token,type)
+                    values ($1,$2,$3) returning *`,
+            values: [username,token,type],
         }
         client.query(query)
         .then(res => {

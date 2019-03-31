@@ -14,7 +14,9 @@ import { HomeComponent } from './home/home.component';
 import { LandingComponent } from './landing/landing.component';
 import { RegisterComponent } from './register/register.component';
 import { VerificationComponent } from './verification/verification.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ChangePasswordComponent } from './home/change-password/change-password.component';
+import { ProfileComponent } from './home/profile/profile.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
   imports: [
@@ -30,7 +32,9 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     LandingComponent,
     RegisterComponent,
     VerificationComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ProfileComponent,
+    ForgotPasswordComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -68,6 +68,7 @@ client.setup = function() {
             CREATE TABLE if not exists verification (
             username varchar(255),
             token varchar(1000),
+            type varchar(1) NOT NULL,
             PRIMARY KEY (token),
             FOREIGN KEY (username) REFERENCES users (username)
             );
@@ -82,8 +83,8 @@ client.setup = function() {
 
 client.connect();
 client.insertUser = users.insertUser;
+client.getVerifiedUser = users.getVerifiedUser;
 client.getUser = users.getUser;
-client.getUnverifiedUser = users.getUnverifiedUser;
 client.getUserByEmail = users.getUserByEmail;
 client.updateUser = users.updateUser;
 client.deleteUser = users.deleteUser;

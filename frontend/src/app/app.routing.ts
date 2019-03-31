@@ -6,7 +6,9 @@ import { HomeComponent } from './home';
 import { LandingComponent } from './landing';
 import { AuthGuard } from './_guards';
 import { VerificationComponent } from './verification';
-import { ChangePasswordComponent } from './change-password';
+import { ChangePasswordComponent } from './home/change-password';
+import { ProfileComponent } from './home/profile';
+import { ForgotPasswordComponent } from './forgot-password';
 import { Role } from './_models';
 import { from } from 'rxjs';
 
@@ -14,11 +16,10 @@ const appRoutes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'home/changePassword',
-        component: ChangePasswordComponent,
+        children: [
+            {path: 'changePassword', component: ChangePasswordComponent},
+            {path: 'profile', component: ProfileComponent},
+        ],
         canActivate: [AuthGuard]
     },
     {
@@ -36,6 +37,10 @@ const appRoutes: Routes = [
     {
         path: '',
         component: LandingComponent
+    },
+    {
+        path: 'iforgot',
+        component: ForgotPasswordComponent
     },
 
     // otherwise redirect to home

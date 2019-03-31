@@ -18,7 +18,7 @@ router.post('/signup', function(req, res) {
         db.insertUser(req.body.username,req.body.password,req.body.email)
             .then((user) =>{
                 var token = crypto.randomBytes(16).toString('hex');
-                db.insertNewToken(req.body.username,token)
+                db.insertNewToken(req.body.username,token,'a')
                 .then( () => {
                     var transporter = nodemailer.createTransport({
                         host: "smtp.gmail.com",
@@ -48,6 +48,42 @@ router.post('/signup', function(req, res) {
     }
 });
 
+router.post('/iforgot', function(req, res) {
+    if (!req.body.email) {
+      res.status(400).send({msg: 'Incomplete details.'})
+    } else {
+        db.getUserByEmail(req.body.email)
+        .then( (user) => {
+            if(user){
+                var token = crypto.randomBytes(16).toString('hex');
+                db.insertNewToken(user.username,token,'p')
+                .then( () => {
+                    var transporter = nodemailer.createTransport({
+                        host: "smtp.gmail.com",
+                        port: 587,
+                        secure: false, // true for 465, false for other ports
+                        auth: {
+                            user: 'thewatercomp@gmail.com', // generated ethereal user
+                            pass: 'wat3r123' // generated ethereal password
+                            }
+                    });
+                    var mailOptions = { from: 'no-reply@yourwebapplication.com', to: req.body.email, subject: 'Forgot Password Token', text: 'Hello,\n\n' + 'Please log in and change your password by clicking the link: ' + req.headers.origin + '\/confirmation\/' + token + '.\n' };
+                    transporter.sendMail(mailOptions, function (err) {
+                        if (err) { return res.status(500).send({ msg: err.message }); }
+                    });
+                    res.json(JSON.parse('{"success": true}'));
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.status(400).send(error);
+                });
+            } else {
+                res.json(JSON.parse('{"success": true}'));
+            }
+        })
+    }
+});
+
 router.post('/confirm', function(req, res) {
     db.verifyToken(req.body.token)
         .then((newUser) => {
@@ -56,9 +92,10 @@ router.post('/confirm', function(req, res) {
                 message: 'Authentication failed. User not found.',
                 });
             }
-            db.getUnverifiedUser(newUser.username)
+            db.getUser(newUser.username)
             .then((user) => {
                 if (!user) {
+                    console.log('aaa')
                     return res.status(401).send({
                     message: 'Authentication failed. User not found.',
                     });
@@ -85,7 +122,7 @@ router.post('/confirm', function(req, res) {
 });
 
 router.post('/signin', function(req, res) {
-    db.getUser(req.body.username)
+    db.getVerifiedUser(req.body.username)
         .then((user) => {
             if (!user) {
                 return res.status(401).send({

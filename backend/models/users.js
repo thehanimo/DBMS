@@ -19,7 +19,7 @@ self.insertUser = function(username,password,email,role='1'){
     });
 }
 
-self.getUser = function(username){
+self.getVerifiedUser = function(username){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {
@@ -35,12 +35,12 @@ self.getUser = function(username){
     });
 }
 
-self.getUnverifiedUser = function(username){
+self.getUser = function(username){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {
             text:   `select * from users
-                    where username = $1 and isactive = false`,
+                    where username = $1`,
             values: [username],
         }
         client.query(query)

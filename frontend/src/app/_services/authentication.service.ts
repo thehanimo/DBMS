@@ -47,6 +47,11 @@ export class AuthenticationService {
             }));
     }
 
+    iforgot(email: string) {
+        return this.http.post<any>(`http://localhost:3000/api/iforgot`, { email })
+        .pipe();
+    }
+
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
@@ -55,9 +60,6 @@ export class AuthenticationService {
 
     register(username: string, email: string, password: string) {
         return this.http.post<any>(`http://localhost:3000/api/signup`, { username, email, password })
-            .pipe(map(user => {
-                // login successful if there's a jwt token in the response
-                return;
-            }));
+            .pipe();
     }
 }
