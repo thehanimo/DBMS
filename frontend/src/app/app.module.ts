@@ -9,14 +9,14 @@ import { routing } from './app.routing';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 
 import { AppRoutingModule } from './app-routing.module';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './landing/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { LandingComponent } from './landing/landing.component';
-import { RegisterComponent } from './register/register.component';
-import { VerificationComponent } from './verification/verification.component';
+import { RegisterComponent } from './landing/register/register.component';
+import { VerificationComponent } from './landing/verification/verification.component';
 import { ChangePasswordComponent } from './home/change-password/change-password.component';
 import { ProfileComponent } from './home/profile/profile.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
 
 @NgModule({
   imports: [

@@ -1,11 +1,17 @@
 <!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-  <div class="navbar-nav">
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="navbar-nav"  *ngIf="currentUser; else landing">
       <a class="nav-item nav-link" routerLink="/home">Home</a>
       <a class="nav-item nav-link" routerLink="/admin" *ngIf="isAdmin">Admin</a>
       <a class="nav-item nav-link" (click)="logout()">Logout</a>
   </div>
 </nav>
+<ng-template #landing>
+  <div class="navbar-nav">
+      <a class="nav-item nav-link" routerLink="./login">Log in</a>
+      <a class="nav-item nav-link" routerLink="./register">Sign Up</a>
+  </div>
+</ng-template>
 
 <!-- main app container -->
 <div class="jumbotron">

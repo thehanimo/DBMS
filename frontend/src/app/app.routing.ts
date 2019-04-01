@@ -1,14 +1,14 @@
 ﻿import { Routes, RouterModule } from '@angular/router';
 
-import { LoginComponent } from './login';
-import { RegisterComponent } from './register';
+import { LoginComponent } from './landing/login';
+import { RegisterComponent } from './landing/register';
 import { HomeComponent } from './home';
 import { LandingComponent } from './landing';
 import { AuthGuard } from './_guards';
-import { VerificationComponent } from './verification';
+import { VerificationComponent } from './landing/verification';
 import { ChangePasswordComponent } from './home/change-password';
 import { ProfileComponent } from './home/profile';
-import { ForgotPasswordComponent } from './forgot-password';
+import { ForgotPasswordComponent } from './landing/forgot-password';
 import { Role } from './_models';
 import { from } from 'rxjs';
 
@@ -23,26 +23,15 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'login',
-        component: LoginComponent
-    },
-    {
-        path: 'register',
-        component: RegisterComponent
-    },
-    {
-        path: 'confirmation/:token',
-        component: VerificationComponent
-    },
-    {
         path: '',
-        component: LandingComponent
+        component: LandingComponent,
+        children: [
+            {path:'login',component:LoginComponent},
+            {path:'register',component: RegisterComponent},
+            {path:'confirmation/:token',component:VerificationComponent},
+            {path:'iforgot',component:ForgotPasswordComponent},
+        ]
     },
-    {
-        path: 'iforgot',
-        component: ForgotPasswordComponent
-    },
-
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];
