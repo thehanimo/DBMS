@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { AuthenticationService } from '@/_services';
 
 @Component({
   selector: 'app-landing',
@@ -6,8 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent implements OnInit {
-
-  constructor() { }
+  constructor(
+  private router: Router,
+  private authenticationService: AuthenticationService
+  ) { 
+    var user = this.authenticationService.currentUserValue
+    if (user) { 
+      if(user.role === '1') this.router.navigate(['/home']);
+      if(user.role === '2') this.router.navigate(['/admin']);
+    }
+  }
 
   ngOnInit() {
   }

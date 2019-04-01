@@ -32,10 +32,6 @@ export class RestaurantRegisterComponent implements OnInit {
       private authenticationService: AuthenticationService,
       private http: HttpClient
   ) { 
-      // redirect to home if already logged in
-      if (this.authenticationService.currentUserValue) { 
-          this.router.navigate(['/home']);
-      }
   }
 
   ngOnInit() {

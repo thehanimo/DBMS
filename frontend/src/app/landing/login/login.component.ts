@@ -19,10 +19,6 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private authenticationService: AuthenticationService
     ) { 
-        // redirect to home if already logged in
-        if (this.authenticationService.currentUserValue) { 
-            this.router.navigate(['/home']);
-        }
     }
 
     ngOnInit() {
@@ -50,8 +46,10 @@ export class LoginComponent implements OnInit {
         this.authenticationService.login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(
-                data => {
-                    this.router.navigate([this.returnUrl]);
+                user => {
+                    if(user.role === '1') this.router.navigate(['/home']);
+                    if(user.role === '2') this.router.navigate(['/admin']);
+                    
                 },
                 error => {
                     this.error = error;

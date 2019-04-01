@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -23,7 +23,6 @@ export class ProfileComponent {
         private router: Router,
         private userService: UserService,
         private authenticationService: AuthenticationService,
-        private cd: ChangeDetectorRef
     ) {
         this.currentUser = this.authenticationService.currentUserValue;
     }

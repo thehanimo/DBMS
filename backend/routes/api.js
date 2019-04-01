@@ -354,4 +354,25 @@ router.post('/restaurant/signup', function(req, res) {
         });
     }
 });
+
+router.get('/admin/restaurant-applications', passport.authenticate('jwt', { session: false}), function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        if (req.user.role === '2'){
+            db.getRestaurantApplications()
+                .then(resolve => {
+                    return res.status(200).send(resolve)
+                })
+                .catch(e => {
+                    console.log(e)
+                    return res.status(403).send({success: false, msg: e})
+                })
+        }
+    } else{
+        return res.status(200).send({success: false, msg: 'Unauthorized'})
+    }
+        
+});
+
+
 module.exports = router;

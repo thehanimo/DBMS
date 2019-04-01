@@ -1,0 +1,22 @@
+<h2 class="mb-3 mt-100 ml-30">Restaurant Applications</h2> 
+    <div class="responsive-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Lon</th>
+          <th>Lat</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let restaurant of restaurants">
+            <td class="align-middle">{{ restaurant.name }}</td>
+            <td class="align-middle">{{ restaurant.email }}</td>
+            <td class="align-middle">{{ restaurant.lon }}</td>
+            <td class="align-middle">{{ restaurant.lon }}</td>
+            <td class="text-right"></td>
+          </tr>
+        </tbody>
+    </table>
+  </div>

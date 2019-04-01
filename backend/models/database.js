@@ -112,4 +112,5 @@ client.verifyToken = verification.verifyToken;
 client.verified = verification.verified;
 
 client.restaurantApply = restaurants.restaurantApply;
+client.getRestaurantApplications = restaurants.getRestaurantApplications;
 module.exports = client;

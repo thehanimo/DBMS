@@ -2,13 +2,16 @@
 
 import { LoginComponent } from './landing/login';
 import { RegisterComponent } from './landing/register';
-import { HomeComponent } from './home';
+import { CustomerComponent } from './customer';
 import { LandingComponent } from './landing';
 import { AuthGuard } from './_guards';
 import { VerificationComponent } from './landing/verification';
-import { ChangePasswordComponent } from './home/change-password';
-import { ProfileComponent } from './home/profile';
+import { ChangePasswordComponent } from './customer/change-password';
+import { ProfileComponent } from './customer/profile';
 import { ForgotPasswordComponent } from './landing/forgot-password';
+
+import { AdminComponent } from './admin'
+import { RestaurantApplicationsComponent } from './admin/restaurant-applications'
 import { Role } from './_models';
 import { from } from 'rxjs';
 import { RestaurantRegisterComponent } from './landing/restaurant-register';
@@ -16,12 +19,14 @@ import { RestaurantRegisterComponent } from './landing/restaurant-register';
 const appRoutes: Routes = [
     {
         path: 'home',
-        component: HomeComponent,
+        component: CustomerComponent,
         children: [
             {path: 'changePassword', component: ChangePasswordComponent},
             {path: 'profile', component: ProfileComponent},
         ],
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        data: { roles: ['1'] },
+
     },
     {
         path: '',
@@ -34,7 +39,16 @@ const appRoutes: Routes = [
             {path:'restaurant-register',component:RestaurantRegisterComponent}
         ]
     },
-    // otherwise redirect to home
+    {
+        path: 'admin',
+        component: AdminComponent,
+        canActivate: [AuthGuard],
+        children: [
+            {path: 'restaurantApplications', component: RestaurantApplicationsComponent},
+        ],
+        data: { roles: ['2'] },
+    },
+    // otherwise redirect to landing page
     { path: '**', redirectTo: '' }
 ];
 
