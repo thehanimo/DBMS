@@ -62,4 +62,8 @@ export class AuthenticationService {
         return this.http.post<any>(`http://localhost:3000/api/signup`, { username, email, password })
             .pipe();
     }
+    restaurantRegister(name: string, email: string, lon: string, lat:string) {
+        return this.http.post<any>(`http://localhost:3000/api/restaurant/signup`, { name, email, lon, lat })
+            .pipe();
+    }
 }

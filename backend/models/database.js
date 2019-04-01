@@ -1,6 +1,7 @@
 const { Client } = require('pg');
 const users = require('./users');
 const userProfile = require('./userProfile');
+const restaurants = require('./restaurants');
 const verification = require('./verification');
 const client = new Client({
     user: 'dbms',
@@ -66,11 +67,19 @@ client.setup = function() {
                );
 
             CREATE TABLE if not exists verification (
-            username varchar(255),
-            token varchar(1000),
-            type varchar(1) NOT NULL,
-            PRIMARY KEY (token),
-            FOREIGN KEY (username) REFERENCES users (username)
+                username varchar(255),
+                token varchar(1000),
+                type varchar(1) NOT NULL,
+                PRIMARY KEY (token),
+                FOREIGN KEY (username) REFERENCES users (username)
+            );
+            
+            CREATE TABLE if not exists restaurantApplications (
+                name varchar(500) NOT NULL,
+                email varchar(255),
+                lon varchar(100) NOT NULL,
+                lat varchar(100) NOT NULL,
+                PRIMARY KEY (email)
             );
             `,
     }
@@ -101,4 +110,6 @@ client.setActive = users.setActive;
 client.insertNewToken = verification.insertNewToken;
 client.verifyToken = verification.verifyToken;
 client.verified = verification.verified;
+
+client.restaurantApply = restaurants.restaurantApply;
 module.exports = client;

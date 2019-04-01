@@ -11,6 +11,7 @@ import { ProfileComponent } from './home/profile';
 import { ForgotPasswordComponent } from './landing/forgot-password';
 import { Role } from './_models';
 import { from } from 'rxjs';
+import { RestaurantRegisterComponent } from './landing/restaurant-register';
 
 const appRoutes: Routes = [
     {
@@ -30,6 +31,7 @@ const appRoutes: Routes = [
             {path:'register',component: RegisterComponent},
             {path:'confirmation/:token',component:VerificationComponent},
             {path:'iforgot',component:ForgotPasswordComponent},
+            {path:'restaurant-register',component:RestaurantRegisterComponent}
         ]
     },
     // otherwise redirect to home

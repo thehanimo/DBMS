@@ -17,6 +17,7 @@ import { VerificationComponent } from './landing/verification/verification.compo
 import { ChangePasswordComponent } from './home/change-password/change-password.component';
 import { ProfileComponent } from './home/profile/profile.component';
 import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
+import { RestaurantRegisterComponent } from './landing/restaurant-register/restaurant-register.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { ForgotPasswordComponent } from './landing/forgot-password/forgot-passwo
     VerificationComponent,
     ChangePasswordComponent,
     ProfileComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    RestaurantRegisterComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

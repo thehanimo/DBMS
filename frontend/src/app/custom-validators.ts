@@ -6,6 +6,12 @@ export function nameValidator(): ValidatorFn {
     return forbidden ? {'nameValidator': control.value}: null;
   };
 }
+export function resnameValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = /[^ A-Za-z]/i.test(control.value);
+    return forbidden ? {'resnameValidator': control.value}: null;
+  };
+}
 export function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
     const forbidden = /[0-9]{10}/i.test(control.value) && control.value.length === 10;
@@ -20,8 +26,15 @@ export function emailValidator(): ValidatorFn {
 }
 export function usernameValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
-    const forbidden = /[a-zA-Z0-9][a-zA-Z0-9_.]{2,29}/i.test(control.value);
-    return forbidden ? null: {'usernameValidator': control.value};
+    if(/[a-zA-Z0-9][a-zA-Z0-9_.]{2,29}/i.test(control.value)){
+      if(/^(?!restaurant).+/i.test(control.value)){
+        return null;
+      } else {
+        return {'usernameAvailableValidator': control.value}
+      }
+    } else{ 
+      return {'usernameValidator': control.value}
+    }
   };
 }
 /[0-9a-zA-Z]{6,}/i

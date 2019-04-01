@@ -334,4 +334,24 @@ getToken = function (headers) {
     }
 };
 
+
+router.post('/restaurant/signup', function(req, res) {
+    if (!req.body.name || !req.body.email || !req.body.lon || !req.body.lat) {
+      res.status(400).send({msg: 'Incomplete details.'})
+    } else {
+        db.restaurantApply(req.body.name, req.body.email, req.body.lon, req.body.lat)
+        .then( (done) => {
+            if(done){
+                res.json(JSON.parse('{"success": true}'));
+            }
+            else{
+                console.log(done)
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            res.status(400).send(error);
+        });
+    }
+});
 module.exports = router;
