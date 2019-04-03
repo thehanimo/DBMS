@@ -76,14 +76,6 @@ client.setup = function() {
                 PRIMARY KEY (token),
                 FOREIGN KEY (username) REFERENCES users (username)
             );
-            
-            CREATE TABLE if not exists restaurantApplications (
-                name varchar(500) NOT NULL,
-                email varchar(255),
-                lon varchar(100) NOT NULL,
-                lat varchar(100) NOT NULL,
-                PRIMARY KEY (email)
-            );
 
             CREATE TABLE if not exists restaurantApplications (
                 id serial,
