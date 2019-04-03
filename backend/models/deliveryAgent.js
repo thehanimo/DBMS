@@ -7,7 +7,8 @@ self.updateLocation = function(agent_username, lat, lon){
             text:   `UPDATE deliveryAgent
                     SET lat = $2,
                         lon = $3
-                    WHERE  username = $1`,
+                    WHERE  username = $1
+                    returning *`,
             values: [agent_username, lat, lon],
         }
         client.query(query)

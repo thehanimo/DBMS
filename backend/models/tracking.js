@@ -4,8 +4,7 @@ self.trackOrder = function(order_id){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {
-            text:   `select lat, lon from tracking where orderId = $1
-                     returning *`,
+            text:   `select lat, lon from tracking where orderId = $1`,
             values: [order_id],
         }
         client.query(query)
