@@ -3,6 +3,8 @@ const users = require('./users');
 const userProfile = require('./userProfile');
 const restaurants = require('./restaurants');
 const verification = require('./verification');
+const tracking = require('./tracking');
+const deliveryAgent = require('./deliveryAgent');
 const client = new Client({
     user: 'dbms',
     host: 'localhost',
@@ -25,7 +27,7 @@ client.setup = function() {
             );
             drop trigger if exists add_created_timestamp on users;
             drop trigger if exists add_modified_timestamp on users;
-
+           
             CREATE OR REPLACE FUNCTION created_timestamp() 
             RETURNS TRIGGER AS $$
             BEGIN
@@ -55,6 +57,7 @@ client.setup = function() {
             for each row
             execute procedure modified_timestamp();
             
+
             CREATE TABLE if not exists userProfile (
                 username varchar(255),
                 firstname varchar(255) NOT NULL,
@@ -180,6 +183,24 @@ client.setup = function() {
                 FOREIGN KEY (orderId) REFERENCES orders(id)
                 
             );
+
+            drop trigger if exists update_tracking on deliveryAgent;
+
+            CREATE OR REPLACE FUNCTION update_tracking()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                SELECT id into @idd FROM orders WHERE del_username = OLD.username;
+                UPDATE tracking lat = NEW.lat where orderId = @idd;
+                UPDATE tracking lat = NEW.lat where orderId = @idd;
+                RETURN NEW;
+            END;
+            $$ language 'plpgsql';
+
+            create trigger update_tracking
+            after update on deliveryAgent
+            for each row
+            execute procedure update_tracking;
+
             `,
     }
     this.query(query)
@@ -212,4 +233,7 @@ client.verified = verification.verified;
 
 client.restaurantApply = restaurants.restaurantApply;
 client.getRestaurantApplications = restaurants.getRestaurantApplications;
+
+client.trackOrder = tracking.trackOrder;
+client.updateLocation = deliveryAgent.updateLocation;
 module.exports = client;
