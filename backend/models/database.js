@@ -11,7 +11,7 @@ const client = new Client({
     port: 5432,
 })
 
-client.setup = function() {
+client.setup = function () {
     const query = {
         text: `create table if not exists users(
             id serial,
@@ -71,19 +71,109 @@ client.setup = function() {
             );
             
             CREATE TABLE if not exists restaurantApplications (
+                id serial,
                 name varchar(500) NOT NULL,
                 email varchar(255),
                 lon varchar(100) NOT NULL,
                 lat varchar(100) NOT NULL,
-                PRIMARY KEY (email)
+                zipcode varchar(6) NOT NULL,
+                phone varchar(10) NOT NULL,
+                address varchar(1000) NOT NULL,
+                logourl varchar(500),
+                openingHrs time(4),
+                closingHrs time(4),
+                status varchar(1) default 'P',
+                PRIMARY KEY (id)
+            );
+            CREATE TABLE if not exists restaurantProfile (
+                username varchar(255),
+                name varchar(500) NOT NULL,
+                email varchar(255),
+                lon varchar(100) NOT NULL,
+                lat varchar(100) NOT NULL,
+                zipcode varchar(6) NOT NULL,
+                phone varchar(10) NOT NULL,
+                address varchar(1000) NOT NULL,
+                logourl varchar(500),
+                openingHrs time(4),
+                closingHrs time(4),
+                ordersCompleted integer default 0,
+                PRIMARY KEY (username)
+            );
+            CREATE TABLE if not exists deliveryAgent (
+                username varchar(225) NOT NULL,
+                firstname varchar(225)NOT NULL,
+                lastname varchar(225),
+                phone varchar(255) NOT NULL,
+                status varchar(1) NOT NULL,
+                lon varchar(100) NOT NULL,
+                lat varchar(100) NOT NULL,
+                ordersCompleted integer default 0,
+                PRIMARY KEY (username),
+                FOREIGN KEY (username) REFERENCES users (username)
+            );
+            
+            CREATE TABLE if not exists category (
+                id serial,
+                categoryName varchar(255),
+                rest_username varchar(255),
+                PRIMARY KEY (id),
+                FOREIGN KEY (rest_username) REFERENCES restaurantProfile (username)
+            );
+            
+            CREATE TABLE if not exists item (
+                id serial,
+                itemName varchar(255) NOT NULL,
+                price real NOT NULL,
+                description varchar(1000),
+                photoUrl varchar(500),
+                categoryId INTEGER,
+                restId varchar(255),
+                PRIMARY KEY (id),
+                FOREIGN KEY (restId) REFERENCES restaurantProfile (username),
+                FOREIGN KEY (categoryId) REFERENCES category (id)
+            );
+            
+            CREATE TABLE if not exists orders (
+                id serial,
+                username varchar(255) NOT NULL,
+                rest_name varchar(255) NOT NULL,
+                lat varchar(100) NOT NULL,
+                lon varchar(100) NOT NULL,
+                del_username varchar(255) NOT NULL,
+                PRIMARY KEY (id),
+                FOREIGN KEY (username) REFERENCES users(username),
+                FOREIGN KEY (rest_name) REFERENCES restaurantProfile(username),
+                FOREIGN KEY (del_username) REFERENCES deliveryAgent(username)
+                
+            );
+            
+            
+            CREATE TABLE if not exists orderItem (
+                orderId INTEGER,
+                itemId INTEGER,
+                quantity integer NOT NULL,
+                PRIMARY KEY (orderId,itemId),
+                FOREIGN KEY (orderId) REFERENCES orders(id),
+                FOREIGN KEY (itemId) REFERENCES item(id)
+                
+            );
+            
+            CREATE TABLE if not exists tracking (
+                orderId INTEGER,
+                lat varchar(100) NOT NULL,
+                lon varchar(100) NOT NULL,
+                PRIMARY KEY (orderId),
+                FOREIGN KEY (orderId) REFERENCES orders(id)
+                
             );
             `,
     }
     this.query(query)
-    .then(res => {
-        console.log(res.command)
-    })
-    .catch(e => console.log(e.stack))
+        .then(res => {
+            console.log(res.command)
+        })
+        .catch(e => console.log(e.stack))
 };
 
 client.connect();
