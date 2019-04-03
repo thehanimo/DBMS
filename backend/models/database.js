@@ -75,6 +75,14 @@ client.setup = function() {
             );
             
             CREATE TABLE if not exists restaurantApplications (
+                name varchar(500) NOT NULL,
+                email varchar(255),
+                lon varchar(100) NOT NULL,
+                lat varchar(100) NOT NULL,
+                PRIMARY KEY (email)
+            );
+
+            CREATE TABLE if not exists restaurantApplications (
                 id serial,
                 name varchar(500) NOT NULL,
                 email varchar(255),
@@ -89,7 +97,6 @@ client.setup = function() {
                 status varchar(1) default 'P',
                 PRIMARY KEY (id)
             );
-
             CREATE TABLE if not exists restaurantProfile (
                 username varchar(255),
                 name varchar(500) NOT NULL,
@@ -105,7 +112,6 @@ client.setup = function() {
                 ordersCompleted integer default 0,
                 PRIMARY KEY (username)
             );
-
             CREATE TABLE if not exists deliveryAgent (
                 username varchar(225) NOT NULL,
                 firstname varchar(225)NOT NULL,
@@ -122,9 +128,9 @@ client.setup = function() {
             CREATE TABLE if not exists category (
                 id serial,
                 categoryName varchar(255),
-                restId varchar(255),
+                rest_username varchar(255),
                 PRIMARY KEY (id),
-                FOREIGN KEY (restId) REFERENCES restaurantProfile (username)
+                FOREIGN KEY (rest_username) REFERENCES restaurantProfile (username)
             );
             
             CREATE TABLE if not exists item (
@@ -133,14 +139,14 @@ client.setup = function() {
                 price real NOT NULL,
                 description varchar(1000),
                 photoUrl varchar(500),
-                categoryId varchar(255),
+                categoryId INTEGER,
                 restId varchar(255),
                 PRIMARY KEY (id),
                 FOREIGN KEY (restId) REFERENCES restaurantProfile (username),
                 FOREIGN KEY (categoryId) REFERENCES category (id)
             );
             
-            CREATE TABLE if not exists order1 (
+            CREATE TABLE if not exists orders (
                 id serial,
                 username varchar(255) NOT NULL,
                 rest_name varchar(255) NOT NULL,
@@ -150,31 +156,30 @@ client.setup = function() {
                 PRIMARY KEY (id),
                 FOREIGN KEY (username) REFERENCES users(username),
                 FOREIGN KEY (rest_name) REFERENCES restaurantProfile(username),
-                FOREIGN KEY (del_username) REFERENCES deliveryAgent(username),
+                FOREIGN KEY (del_username) REFERENCES deliveryAgent(username)
                 
             );
             
             
             CREATE TABLE if not exists orderItem (
-                orderId varchar(100),
-                itemId varchar(100),
+                orderId INTEGER,
+                itemId INTEGER,
                 quantity integer NOT NULL,
                 PRIMARY KEY (orderId,itemId),
-                FOREIGN KEY (orderId) REFERENCES order1(id),
-                FOREIGN KEY (itemId) REFERENCES item(id),
+                FOREIGN KEY (orderId) REFERENCES orders(id),
+                FOREIGN KEY (itemId) REFERENCES item(id)
                 
             );
             
             
             CREATE TABLE if not exists tracking (
-                orderId varchar(100),
+                orderId INTEGER,
                 lat varchar(100) NOT NULL,
                 lon varchar(100) NOT NULL,
                 PRIMARY KEY (orderId),
-                FOREIGN KEY (orderId) REFERENCES order1(id),
+                FOREIGN KEY (orderId) REFERENCES orders(id)
                 
             );
-
             `,
     }
     this.query(query)
