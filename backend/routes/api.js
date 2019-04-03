@@ -188,7 +188,7 @@ router.get('/user', passport.authenticate('jwt', { session: false}), function(re
     if (token) {
         db.getUserProfile(req.user.username)
         .then(resolve => {
-            if(resolve.hasOwnProperty("pictureurl")){
+            if(resolve.pictureurl){
                 fs.readFile(resolve.pictureurl, function read(err, data) {
                     if (err) {
                         return res.status(403).send({success: false, msg: 'Unauthorized.'})

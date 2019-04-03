@@ -18,7 +18,6 @@ export class RestaurantApplicationsComponent implements OnInit {
   ngOnInit() {
     this.adminService.getRestaurantApplications().pipe(first()).subscribe(restaurants => {
       this.restaurants = restaurants;
-      console.log(restaurants);
     })
 
   }

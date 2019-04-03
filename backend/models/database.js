@@ -25,7 +25,6 @@ client.setup = function() {
             );
             drop trigger if exists add_created_timestamp on users;
             drop trigger if exists add_modified_timestamp on users;
-
             CREATE OR REPLACE FUNCTION created_timestamp() 
             RETURNS TRIGGER AS $$
             BEGIN
@@ -34,7 +33,6 @@ client.setup = function() {
                 RETURN NEW; 
             END;
             $$ language 'plpgsql';
-
             CREATE OR REPLACE FUNCTION modified_timestamp() 
             RETURNS TRIGGER AS $$
             BEGIN
@@ -43,7 +41,6 @@ client.setup = function() {
                 RETURN NEW; 
             END;
             $$ language 'plpgsql';
-
             
             create trigger add_created_timestamp
             before insert on users
@@ -65,7 +62,6 @@ client.setup = function() {
                 PRIMARY KEY (username),
                 FOREIGN KEY (username) REFERENCES users (username)
                );
-
             CREATE TABLE if not exists verification (
                 username varchar(255),
                 token varchar(1000),
