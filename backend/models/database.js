@@ -191,7 +191,7 @@ client.setup = function() {
             BEGIN
                 SELECT id into @idd FROM orders WHERE del_username = OLD.username;
                 UPDATE tracking lat = NEW.lat where orderId = @idd;
-                UPDATE tracking lat = NEW.lat where orderId = @idd;
+                UPDATE tracking lon = NEW.lon where orderId = @idd;
                 RETURN NEW;
             END;
             $$ language 'plpgsql';
