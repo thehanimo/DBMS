@@ -3,6 +3,8 @@ const users = require('./users');
 const userProfile = require('./userProfile');
 const restaurants = require('./restaurants');
 const verification = require('./verification');
+const tracking = require('./tracking');
+const deliveryAgent = require('./deliveryAgent');
 const client = new Client({
     user: 'dbms',
     host: 'localhost',
@@ -24,7 +26,8 @@ client.setup = function () {
             modified timestamp
             );
             drop trigger if exists add_created_timestamp on users;
-            drop trigger if exists add_modified_timestamp on users;
+            drop trigger if exists add_modified_timestamp on users; 
+
             CREATE OR REPLACE FUNCTION created_timestamp() 
             RETURNS TRIGGER AS $$
             BEGIN
@@ -52,6 +55,7 @@ client.setup = function () {
             for each row
             execute procedure modified_timestamp();
             
+
             CREATE TABLE if not exists userProfile (
                 username varchar(255),
                 firstname varchar(255) NOT NULL,
@@ -69,9 +73,25 @@ client.setup = function () {
                 PRIMARY KEY (token),
                 FOREIGN KEY (username) REFERENCES users (username)
             );
-            
+
             CREATE TABLE if not exists restaurantApplications (
                 id serial,
+                name varchar(500) NOT NULL,
+                email varchar(255),
+                lon varchar(100) NOT NULL,
+                lat varchar(100) NOT NULL,
+                zipcode varchar(6) NOT NULL,
+                phone varchar(10) NOT NULL,
+                address varchar(1000) NOT NULL,
+                logourl varchar(500),
+                openingHrs time(4),
+                closingHrs time(4),
+                status varchar(1) default 'P',
+                PRIMARY KEY (id)
+            );
+            CREATE TABLE if not exists restaurantProfile (
+                username varchar(255),
+
                 name varchar(500) NOT NULL,
                 email varchar(255),
                 lon varchar(100) NOT NULL,
@@ -97,6 +117,7 @@ client.setup = function () {
                 logourl varchar(500),
                 openingHrs time(4),
                 closingHrs time(4),
+
                 ordersCompleted integer default 0,
                 PRIMARY KEY (username)
             );
@@ -158,7 +179,8 @@ client.setup = function () {
                 FOREIGN KEY (itemId) REFERENCES item(id)
                 
             );
-            
+                     
+
             CREATE TABLE if not exists tracking (
                 orderId INTEGER,
                 lat varchar(100) NOT NULL,
@@ -167,6 +189,24 @@ client.setup = function () {
                 FOREIGN KEY (orderId) REFERENCES orders(id)
                 
             );
+
+            drop trigger if exists update_tracking on deliveryAgent;
+
+            CREATE OR REPLACE FUNCTION update_tracking()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                SELECT id into @idd FROM orders WHERE del_username = OLD.username;
+                UPDATE tracking lat = NEW.lat where orderId = @idd;
+                UPDATE tracking lon = NEW.lon where orderId = @idd;
+                RETURN NEW;
+            END;
+            $$ language 'plpgsql';
+
+            create trigger update_tracking
+            after update on deliveryAgent
+            for each row
+            execute procedure update_tracking;
+
             `,
     }
     this.query(query)
@@ -199,4 +239,7 @@ client.verified = verification.verified;
 
 client.restaurantApply = restaurants.restaurantApply;
 client.getRestaurantApplications = restaurants.getRestaurantApplications;
+
+client.trackOrder = tracking.trackOrder;
+client.updateLocation = deliveryAgent.updateLocation;
 module.exports = client;
