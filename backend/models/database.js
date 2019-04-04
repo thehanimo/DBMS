@@ -3,6 +3,10 @@ const users = require('./users');
 const userProfile = require('./userProfile');
 const restaurants = require('./restaurants');
 const verification = require('./verification');
+const orders =  require('./orders.js');
+const orderItem =  require('./orderItem.js');
+const category =  require('./category.js');
+const item =  require('./item.js');
 const client = new Client({
     user: 'dbms',
     host: 'localhost',
@@ -199,4 +203,23 @@ client.verified = verification.verified;
 
 client.restaurantApply = restaurants.restaurantApply;
 client.getRestaurantApplications = restaurants.getRestaurantApplications;
+
+client.orders = orders.addOrder;
+client.orders = orders.deleteOrder;
+client.orders = orders.listOrder;
+
+client.category = category.addCategory;
+client.category = category.listCategories;
+
+client.orderItem = orderItem.addOrderitem;
+client.orderItem = orderItem.listOrder;
+
+client.item = item.addItem;
+client.item = item.listItems;
+client.item = item.updateName;
+client.item = item.updatePrice;
+client.item = item.updateDescription;
+client.item = item.updateUrl;
+client.item = item.deleteItem;
+
 module.exports = client;
