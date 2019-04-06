@@ -80,7 +80,7 @@ export class RegisterComponent implements OnInit {
                         )
 
                     } else {
-                        this.f.username.setErrors({'usernameValidator': true})
+                        this.f.username.setErrors({'usernametakenValidator': true})
                         return;
                     }
                 },

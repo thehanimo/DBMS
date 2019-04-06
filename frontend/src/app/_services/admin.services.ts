@@ -8,13 +8,13 @@ export class AdminService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get<UserProfile[]>(`http://localhost:3000/api/users`);
+        return this.http.get<UserProfile[]>(`http://localhost:3000/admin/users`);
     }
 
     getRestaurantApplications() {
-        return this.http.get(`http://localhost:3000/api/admin/restaurant-applications`);
+        return this.http.get(`http://localhost:3000/admin/restaurant-applications`);
     }
     updateUserProfile(username,options){
-        return this.http.post<UserProfile>(`http://localhost:3000/api/user`,{username,options});
+        return this.http.post<UserProfile>(`http://localhost:3000/user`,{username,options});
     }
 }

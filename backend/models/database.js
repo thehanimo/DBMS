@@ -84,8 +84,8 @@ client.setup = function() {
                 phone varchar(10) NOT NULL,
                 address varchar(1000) NOT NULL,
                 logourl varchar(500),
-                openingHrs time(4),
-                closingHrs time(4),
+                openingHrs time NOT NULL,
+                closingHrs time NOT NULL,
                 status varchar(1) default 'P',
                 PRIMARY KEY (id)
             );
@@ -173,23 +173,6 @@ client.setup = function() {
                 
             );
 
-            drop trigger if exists update_tracking on deliveryAgent;
-
-            CREATE OR REPLACE FUNCTION update_tracking()
-            RETURNS TRIGGER AS $$
-            BEGIN
-                SELECT id into @idd FROM orders WHERE del_username = OLD.username;
-                UPDATE tracking lat = NEW.lat where orderId = @idd;
-                UPDATE tracking lon = NEW.lon where orderId = @idd;
-                RETURN NEW;
-            END;
-            $$ language 'plpgsql';
-
-            create trigger update_tracking
-            after update on deliveryAgent
-            for each row
-            execute procedure update_tracking;
-
             `,
     }
     this.query(query)
@@ -222,6 +205,7 @@ client.verified = verification.verified;
 
 client.restaurantApply = restaurants.restaurantApply;
 client.getRestaurantApplications = restaurants.getRestaurantApplications;
+client.getRestaurantApplicationByEmail = restaurants.getRestaurantApplicationByEmail;
 
 client.trackOrder = tracking.trackOrder;
 client.updateLocation = deliveryAgent.updateLocation;
