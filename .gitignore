@@ -1,2 +1,2 @@
-backend/models/logos/*
-backend/models/pictures/*
+/backend/models/logos/*
+/backend/models/pictures/*
