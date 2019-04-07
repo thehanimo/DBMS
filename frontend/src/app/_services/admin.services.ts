@@ -17,4 +17,7 @@ export class AdminService {
     updateUserProfile(username,options){
         return this.http.post<UserProfile>(`http://localhost:3000/user`,{username,options});
     }
+    updateRestaurantApplication(email, status){
+        return this.http.post(`http://localhost:3000/admin/restaurantApplication`,{email, status});
+    }
 }

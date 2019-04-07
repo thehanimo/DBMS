@@ -45,4 +45,19 @@ self.getRestaurantApplications = function(){
         .catch(e => reject(e))
     });
 }
+self.updateRestaurantApplication = function(email, status){
+    client = this;
+    return new Promise(function(resolve,reject){
+        const query = {
+            text:   `update restaurantApplications
+                    set status = $1 where email = $2`,
+            values: [status,email],
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows[0])
+        })
+        .catch(e => reject(e))
+    });
+}
 module.exports = self;

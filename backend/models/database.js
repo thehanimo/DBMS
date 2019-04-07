@@ -172,7 +172,27 @@ client.setup = function() {
                 FOREIGN KEY (orderId) REFERENCES orders(id)
                 
             );
+            
+            CREATE OR REPLACE FUNCTION clear_restAppl() 
+            RETURNS TRIGGER AS $$
+            BEGIN
+                IF NEW.status = 'A' THEN
+                INSERT INTO restaurantProfile
+                VALUES (CONCAT('restaurant',NEW.id), NEW.name, NEW.email, NEW.lon, NEW.lat, NEW.zipcode, NEW.phone, NEW.address, NEW.logourl, NEW.openingHrs, NEW.closingHrs);
+                INSERT INTO users(username,email,password,role)
+                VALUES (CONCAT('restaurant',NEW.id),NEW.email,MD5(random()::text),'3');
+                END IF;
+                DELETE FROM restaurantApplications WHERE email=NEW.email;
+                RETURN NEW; 
+            END;
+            $$ language 'plpgsql';
+            
+            drop trigger if exists update_restAppl on restaurantApplications;
 
+            create trigger update_restAppl
+            after update on restaurantApplications
+            for each row
+            execute procedure clear_restAppl();
             `,
     }
     this.query(query)
@@ -206,6 +226,7 @@ client.verified = verification.verified;
 client.restaurantApply = restaurants.restaurantApply;
 client.getRestaurantApplications = restaurants.getRestaurantApplications;
 client.getRestaurantApplicationByEmail = restaurants.getRestaurantApplicationByEmail;
+client.updateRestaurantApplication = restaurants.updateRestaurantApplication;
 
 client.trackOrder = tracking.trackOrder;
 client.updateLocation = deliveryAgent.updateLocation;

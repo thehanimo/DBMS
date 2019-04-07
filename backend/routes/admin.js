@@ -45,6 +45,22 @@ router.get('/users', passport.authenticate('jwt', { session: false}), function(r
     }
 });
 
+router.post('/restaurantApplication', passport.authenticate('jwt', { session: false}), function(req, res) {
+    var token = getToken(req.headers);
+    if (token && req.user.role === '2') {
+        db.updateRestaurantApplication(req.body.email, req.body.status)
+        .then(resolve => {
+            return res.status(200).send(resolve)
+        })
+        .catch(e => {
+            console.log(e)
+            return res.status(403).send({success: false, msg: 'Unauthorized.'})
+        })
+    } else {
+        return res.status(404).send({success: false, msg: 'Unauthorized.'});
+    }
+});
+
 getToken = function (headers) {
     if (headers && headers.authorization) {
         var parted = headers.authorization.split(' ');
