@@ -8,13 +8,13 @@ export class UserService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get<UserProfile[]>(`http://localhost:3000/api/users`);
+        return this.http.get<UserProfile[]>(`http://localhost:3000/admin/users`);
     }
 
     getUserProfile() {
-        return this.http.get<UserProfile>(`http://localhost:3000/api/user`);
+        return this.http.get<UserProfile>(`http://localhost:3000/user`);
     }
     updateUserProfile(username,options){
-        return this.http.post<UserProfile>(`http://localhost:3000/api/user`,{username,options});
+        return this.http.post<UserProfile>(`http://localhost:3000/user`,{username,options});
     }
 }

@@ -22,7 +22,6 @@ export class RestaurantRegisterComponent implements OnInit {
   returnUrl: string;
   error = '';
   map: any;
-  lonlat: any;
 
   constructor(
 
@@ -36,7 +35,19 @@ export class RestaurantRegisterComponent implements OnInit {
 
   ngOnInit() {
     
-    
+    this.restaurantRegisterForm = this.formBuilder.group({
+      restaurantName: ['', [Validators.required,customValidators.resnameValidator()]],
+      email: ['',[Validators.required,customValidators.emailValidator()]],
+      lat: ['',Validators.required],
+      lon: ['',Validators.required],
+      zipcode: ['',[Validators.required,customValidators.zipcodeValidator()]],
+      phone: ['',[Validators.required,customValidators.phoneValidator()]],
+      address: ['',[Validators.required,customValidators.addressValidator()]],
+      logo: ['',Validators.required],
+      openingHrs: ['',[Validators.required,customValidators.timeValidator()]],
+      closingHrs: ['',[Validators.required,customValidators.timeValidator()]],
+  });
+
     this.map = new ol.Map({
       target: 'map',
       layers: [
@@ -50,15 +61,15 @@ export class RestaurantRegisterComponent implements OnInit {
       })
     });
     var vectorSource = null;
-    this.map.on('click', function (args) {
+    this.map.on('click', (args) => {
 
-      this.lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
+      var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
       if (vectorSource){
         vectorSource.clear()
       }
       var marker = new ol.Feature({
         geometry: new ol.geom.Point(
-          ol.proj.fromLonLat(this.lonlat)
+          ol.proj.fromLonLat(lonlat)
         ),  // Cordinates of New York's Town Hall
       });
       vectorSource = new ol.source.Vector({
@@ -67,21 +78,34 @@ export class RestaurantRegisterComponent implements OnInit {
       var markerVectorLayer = new ol.layer.Vector({
         source: vectorSource,
       });
-      this.addLayer(markerVectorLayer);
-      console.log(this.lonlat)
+      this.map.addLayer(markerVectorLayer);
+      this.restaurantRegisterForm.controls['lon'].setValue(lonlat[1].toString());
+      this.restaurantRegisterForm.controls['lat'].setValue(lonlat[0].toString());
 
     });
     
-    this.restaurantRegisterForm = this.formBuilder.group({
-        restaurantName: ['', [Validators.required,customValidators.resnameValidator()]],
-        email: ['',[Validators.required,customValidators.emailValidator()]],
-    });
+    
     
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
   }
   // convenience getter for easy access to form fields
   get f() { return this.restaurantRegisterForm.controls; }
+
+
+  onFileChange(event) {
+    let reader = new FileReader();
+   
+    if(event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+    
+      reader.onload = () => {
+        this.restaurantRegisterForm.controls['logo'].setValue(reader.result.toString())
+      };
+    }
+}
+
 
   onSubmit() {
     this.submitted = true;
@@ -95,7 +119,7 @@ export class RestaurantRegisterComponent implements OnInit {
         data2 => {
             if (data2){
                 this.loading = true;
-                this.authenticationService.restaurantRegister(this.f.restaurantName.value, this.f.email.value, this.map.lonlat[0].toString(),this.map.lonlat[1].toString())
+                this.authenticationService.restaurantRegister(this.f.restaurantName.value, this.f.email.value, this.f.lat.value,this.f.lon.value, this.f.address.value, this.f.zipcode.value, this.f.phone.value, this.f.openingHrs.value, this.f.closingHrs.value, this.f.logo.value)
                 .pipe(first())
                 .subscribe(
                     data => {
