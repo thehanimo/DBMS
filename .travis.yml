@@ -11,6 +11,9 @@ services:
   - postgresql
 
 install:
+  - cd backend/
+  - npm install
+  - cd ../frontend
   - npm install
 
 branches:
@@ -23,6 +26,5 @@ before_script:
   - psql -c "CREATE USER dbms WITH PASSWORD 'password';" -U postgres
   - psql -c "GRANT ALL PRIVILEGES ON DATABASE db TO dbms;" -U postgres
 
-script:
-  - ng lint
+script: 'true'
 
