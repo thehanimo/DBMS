@@ -22,6 +22,8 @@ import { ForgotPasswordComponent } from './landing/forgot-password/forgot-passwo
 import { RestaurantRegisterComponent } from './landing/restaurant-register/restaurant-register.component';
 import { AdminComponent } from './admin/admin.component';
 import { RestaurantApplicationsComponent } from './admin/restaurant-applications/restaurant-applications.component';
+import { SingleRestoApplicationComponent } from './admin/single-resto-application/single-resto-application.component';
+import { RestaurantComponent } from './restaurant/restaurant.component';
 
 @NgModule({
   imports: [
@@ -43,7 +45,9 @@ import { RestaurantApplicationsComponent } from './admin/restaurant-applications
     ForgotPasswordComponent,
     RestaurantRegisterComponent,
     AdminComponent,
-    RestaurantApplicationsComponent
+    RestaurantApplicationsComponent,
+    SingleRestoApplicationComponent,
+    RestaurantComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

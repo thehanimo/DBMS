@@ -36,7 +36,7 @@ self.getRestaurantApplications = function(){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {
-            text:   `select * from restaurantApplications`
+            text:   `select name,email,phone,zipcode,id from restaurantApplications`
         }
         client.query(query)
         .then(res => {
@@ -45,12 +45,29 @@ self.getRestaurantApplications = function(){
         .catch(e => reject(e))
     });
 }
+
+self.getRestaurantApplicationByID = function(id){
+    client = this;
+    return new Promise(function(resolve,reject){
+        const query = {
+            text:   `select * from restaurantApplications
+                    where id = $1`,
+            values: [id],
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows[0])
+        })
+        .catch(e => reject(e))
+    });
+}
+
 self.updateRestaurantApplication = function(email, status){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {
             text:   `update restaurantApplications
-                    set status = $1 where email = $2`,
+                    set status = $1 where email = $2 returning *`,
             values: [status,email],
         }
         client.query(query)

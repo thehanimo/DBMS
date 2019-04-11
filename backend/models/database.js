@@ -221,11 +221,12 @@ client.setActive = users.setActive;
 
 client.insertNewToken = verification.insertNewToken;
 client.verifyToken = verification.verifyToken;
-client.verified = verification.verified;
+client.deleteToken = verification.deleteToken;
 
 client.restaurantApply = restaurants.restaurantApply;
 client.getRestaurantApplications = restaurants.getRestaurantApplications;
 client.getRestaurantApplicationByEmail = restaurants.getRestaurantApplicationByEmail;
+client.getRestaurantApplicationByID = restaurants.getRestaurantApplicationByID;
 client.updateRestaurantApplication = restaurants.updateRestaurantApplication;
 
 client.trackOrder = tracking.trackOrder;

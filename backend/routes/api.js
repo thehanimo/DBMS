@@ -17,7 +17,7 @@ router.post('/signup', function(req, res) {
     } else {
         db.insertUser(req.body.username,req.body.password,req.body.email)
             .then((user) =>{
-                var token = crypto.randomBytes(16).toString('hex');
+                var token = crypto.createHash('md5').update(req.body.username).digest('hex')
                 db.insertNewToken(req.body.username,token,'a')
                 .then( () => {
                     var transporter = nodemailer.createTransport({
@@ -72,6 +72,7 @@ router.post('/iforgot', function(req, res) {
                         if (err) { return res.status(500).send({ msg: err.message }); }
                     });
                     res.json(JSON.parse('{"success": true}'));
+                    setTimeout( () => db.deleteToken(user.username), 60000)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -95,14 +96,13 @@ router.post('/confirm', function(req, res) {
             db.getUser(newUser.username)
             .then((user) => {
                 if (!user) {
-                    console.log('aaa')
                     return res.status(401).send({
                     message: 'Authentication failed. User not found.',
                     });
                 }
                 db.setActive(newUser.username)
                     .catch((error) => res.status(400).send(error));
-                db.verified(newUser.username)
+                db.deleteToken(newUser.username)
                     .catch((error) => res.status(400).send(error));
                 var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
                 jwt.verify(token, 'nodeauthsecret', function(err, data){
@@ -178,7 +178,7 @@ router.post('/restaurant/signup', function(req, res) {
       res.status(400).send({msg: 'Incomplete details.'})
     } else {
         var logourl = __dirname + "/../models/logos/" + crypto.createHash('md5').update(req.body.email).digest('hex');
-        fs.writeFile(logourl, req.body.logourl, function(err) {
+        fs.writeFile(logourl, req.body.logo, function(err) {
             if(err) {
                 return res.status(403).send({success: false, msg: 'Unauthorized.'})
             }

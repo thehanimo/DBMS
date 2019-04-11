@@ -101,7 +101,9 @@ export class RestaurantRegisterComponent implements OnInit {
       reader.readAsDataURL(file);
     
       reader.onload = () => {
-        this.restaurantRegisterForm.controls['logo'].setValue(reader.result.toString())
+        this.restaurantRegisterForm.patchValue({
+          logo: reader.result.toString()
+        })
       };
     }
 }
