@@ -48,7 +48,7 @@ export class ChangePasswordComponent implements OnInit {
           return;
       }
       var password = this.f.password1.value;
-      this.http.post(`http://localhost:3000/api/user/changePassword`, {password})
+      this.http.post(`http://localhost:3000/user/changePassword`, {password})
       .pipe(first())
           .subscribe(
               data => {

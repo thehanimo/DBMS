@@ -44,7 +44,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), function(req, 
   var token = getToken(req.headers);
   if (token) {
       if(req.body.options.hasOwnProperty('picture')){
-          const pictureurl = __dirname + "/../models/pictures/" + crypto.createHash('md5').update(req.user.id).digest('hex');
+          const pictureurl = __dirname + "/../models/pictures/" + crypto.createHash('md5').update(req.user.id.toString()).digest('hex');
           fs.writeFile(pictureurl, req.body.options.picture, function(err) {
               if(err) {
                   return res.status(403).send({success: false, msg: 'Unauthorized.'})
