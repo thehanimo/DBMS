@@ -73,7 +73,7 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let restaurant of restaurants" >
-                        <td class="text-center">{{ restaurant.name }}</td>
+                        <td class="text-center"><a [routerLink]="['../restaurantApplication', restaurant.id]">{{ restaurant.name }}</a></td>
                         <td class="text-center">{{ restaurant.email }}</td>
                         <td class="text-center">{{ restaurant.zipcode }}</td>
                         <td class="text-center">{{ restaurant.phone }}</td>

@@ -14,6 +14,9 @@ export class AdminService {
     getRestaurantApplications() {
         return this.http.get(`http://localhost:3000/admin/restaurant-applications`);
     }
+    getRestaurantApplicationByID(id) {
+        return this.http.get(`http://localhost:3000/admin/restaurant-application/` + id);
+    }
     updateUserProfile(username,options){
         return this.http.post<UserProfile>(`http://localhost:3000/user`,{username,options});
     }

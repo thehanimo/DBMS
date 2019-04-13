@@ -15,6 +15,8 @@ import { RestaurantApplicationsComponent } from './admin/restaurant-applications
 import { Role } from './_models';
 import { from } from 'rxjs';
 import { RestaurantRegisterComponent } from './landing/restaurant-register';
+import { SingleRestoApplicationComponent } from './admin/single-resto-application/single-resto-application.component';
+import { RestaurantComponent } from './restaurant/restaurant.component';
 
 const appRoutes: Routes = [
     {
@@ -45,8 +47,17 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard],
         children: [
             {path: 'restaurantApplications', component: RestaurantApplicationsComponent},
+            {path: 'restaurantApplication/:id', component: SingleRestoApplicationComponent},
         ],
         data: { roles: ['2'] },
+    },
+    {
+        path: 'restaurant',
+        component: RestaurantComponent,
+        canActivate: [AuthGuard],
+        children: [
+        ],
+        data: { roles: ['3'] },
     },
     // otherwise redirect to landing page
     { path: '**', redirectTo: '' }
