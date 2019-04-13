@@ -18,6 +18,24 @@ export function phoneValidator(): ValidatorFn {
     return forbidden ? null: {'phoneValidator': control.value};
   };
 }
+export function zipcodeValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = /[1-9][0-9][0-9][0-9][0-9][0-9]/i.test(control.value)
+    return forbidden ? null: {'zipcodeValidator': control.value};
+  };
+}
+export function timeValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = /[0-1][0-9][0-5][0-9]/i.test(control.value) || /[2][0-3][0-5][0-9]/i.test(control.value)
+    return forbidden ? null: {'timeValidator': control.value};
+  };
+}
+export function addressValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = /[a-zA-Z0-9]+[\s]*[a-zA-Z0-9.\-\,\#]+[\s]*[a-zA-Z0-9.\-\,\#]+[a-zA-Z0-9\s.\-\,\#]*/i.test(control.value)
+    return forbidden ? null: {'addressValidator': control.value};
+  };
+}
 export function emailValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
     const forbidden = /([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/i.test(control.value);

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
@@ -20,13 +22,17 @@ import { ForgotPasswordComponent } from './landing/forgot-password/forgot-passwo
 import { RestaurantRegisterComponent } from './landing/restaurant-register/restaurant-register.component';
 import { AdminComponent } from './admin/admin.component';
 import { RestaurantApplicationsComponent } from './admin/restaurant-applications/restaurant-applications.component';
+import { SingleRestoApplicationComponent } from './admin/single-resto-application/single-resto-application.component';
+import { RestaurantComponent } from './restaurant/restaurant.component';
+import { ChangePasswordComponent as RChangePasswordComponent} from './restaurant/change-password/change-password.component'
 
 @NgModule({
   imports: [
   BrowserModule,
   ReactiveFormsModule,
   HttpClientModule,
-  routing
+  routing,
+  NgbModule,
   ],
   declarations: [
     AppComponent,
@@ -40,7 +46,10 @@ import { RestaurantApplicationsComponent } from './admin/restaurant-applications
     ForgotPasswordComponent,
     RestaurantRegisterComponent,
     AdminComponent,
-    RestaurantApplicationsComponent
+    RestaurantApplicationsComponent,
+    SingleRestoApplicationComponent,
+    RestaurantComponent,
+    RChangePasswordComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

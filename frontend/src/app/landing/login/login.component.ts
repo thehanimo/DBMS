@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
                 user => {
                     if(user.role === '1') this.router.navigate(['/home']);
                     if(user.role === '2') this.router.navigate(['/admin']);
-                    
+                    if(user.role === '3') this.router.navigate(['/restaurant'])
                 },
                 error => {
                     this.error = error;

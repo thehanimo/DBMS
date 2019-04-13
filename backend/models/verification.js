@@ -31,7 +31,7 @@ self.verifyToken = function(token){
         .catch(e => reject(e))
     });
 }
-self.verified = function(username){
+self.deleteToken = function(username){
     client = this;
     return new Promise(function(resolve,reject){
         const query = {

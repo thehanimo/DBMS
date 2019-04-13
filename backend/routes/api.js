@@ -17,7 +17,7 @@ router.post('/signup', function(req, res) {
     } else {
         db.insertUser(req.body.username,req.body.password,req.body.email)
             .then((user) =>{
-                var token = crypto.randomBytes(16).toString('hex');
+                var token = crypto.createHash('md5').update(req.body.username).digest('hex')
                 db.insertNewToken(req.body.username,token,'a')
                 .then( () => {
                     var transporter = nodemailer.createTransport({
@@ -55,7 +55,7 @@ router.post('/iforgot', function(req, res) {
         db.getUserByEmail(req.body.email)
         .then( (user) => {
             if(user){
-                var token = crypto.randomBytes(16).toString('hex');
+                var token = crypto.createHash('md5').update(user.username).digest('hex')
                 db.insertNewToken(user.username,token,'p')
                 .then( () => {
                     var transporter = nodemailer.createTransport({
@@ -72,6 +72,7 @@ router.post('/iforgot', function(req, res) {
                         if (err) { return res.status(500).send({ msg: err.message }); }
                     });
                     res.json(JSON.parse('{"success": true}'));
+                    setTimeout( () => db.deleteToken(user.username), 60000)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -95,14 +96,13 @@ router.post('/confirm', function(req, res) {
             db.getUser(newUser.username)
             .then((user) => {
                 if (!user) {
-                    console.log('aaa')
                     return res.status(401).send({
                     message: 'Authentication failed. User not found.',
                     });
                 }
                 db.setActive(newUser.username)
                     .catch((error) => res.status(400).send(error));
-                db.verified(newUser.username)
+                db.deleteToken(newUser.username)
                     .catch((error) => res.status(400).send(error));
                 var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
                 jwt.verify(token, 'nodeauthsecret', function(err, data){
@@ -144,22 +144,6 @@ router.post('/signin', function(req, res) {
         .catch((error) => res.status(400).send(error));
 });
 
-router.get('/users', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if (token && req.user.role === '2') {
-        db.getUsers()
-        .then(resolve => {
-            return res.status(200).send(resolve)
-        })
-        .catch(e => {
-            console.log(e)
-            return res.status(403).send({success: false, msg: 'Unauthorized.'})
-        })
-    } else {
-        return res.status(403).send({success: false, msg: 'Unauthorized.'});
-    }
-});
-
 router.post('/username', function(req, res) {
     db.getUser(req.body.username)
     .then(resolve => {
@@ -173,15 +157,21 @@ router.post('/username', function(req, res) {
 
 router.post('/email', function(req, res) {
     db.getUserByEmail(req.body.email)
-    .then(resolve => {
-        return res.status(200).send(resolve === undefined)
+    .then((resolve1) => {
+        db.getRestaurantApplicationByEmail(req.body.email)
+        .then(resolve => {
+            return res.status(200).send(resolve1 === undefined && resolve === undefined)
+        })
+        .catch(e => {
+            console.log(e)
+            return res.status(404).send({message: "Server down."})
+        })
     })
     .catch(e => {
         console.log(e)
         return res.status(404).send({message: "Server down."})
     })
 });
-
 
 router.get('/user', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
@@ -268,58 +258,34 @@ router.post('/user', passport.authenticate('jwt', { session: false}), function(r
                 }
             })
         }
-    } else {
-        return res.status(403).send({success: false, msg: 'Unauthorized.'});
-    }
-});
 
-router.post('/user/changePassword', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if (token) {
-        jwt.verify(token, 'nodeauthsecret', function(err, data){
-            if(!err){
-                db.changePassword(data.username,req.body.password)
-                .then(resolve => {
-                    return res.status(200).send({success: true, msg: 'Updated.'});
-                })
-                .catch(e => {
-                    console.log(e)
-                    return res.status(403).send({success: false, msg: 'Unauthorized.'})
-                })
+router.post('/restaurant/signup', function(req, res) {
+    if (!req.body.name || !req.body.email || !req.body.lon || !req.body.lat || !req.body.address || !req.body.zipcode || !req.body.phone || !req.body.openingHrs || !req.body.closingHrs || !req.body.logo) {
+      res.status(400).send({msg: 'Incomplete details.'})
+    } else {
+        var logourl = __dirname + "/../models/logos/" + crypto.createHash('md5').update(req.body.email).digest('hex');
+        fs.writeFile(logourl, req.body.logo, function(err) {
+            if(err) {
+                return res.status(403).send({success: false, msg: 'Unauthorized.'})
             }
-        })
-    } else {
-        return res.status(403).send({success: false, msg: 'Unauthorized.'});
-    }
-});
-
-
-router.post('/user/picture', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if (token) {
-        db.getUserProfile(req.user.username)
-        .then(resolve => {
-            if(resolve.hasOwnProperty("pictureurl")){
-                fs.readFile(resolve.pictureurl, function read(err, data) {
-                    if (err) {
-                        return res.status(404).send({picture: "Not found"})
-                    }
-                    resolve.picture = data.toString();
-                    return res.status(200).send(resolve.picture)
-                });
+        });
+        db.restaurantApply(req.body.name, req.body.email, req.body.lon, req.body.lat, req.body.address, req.body.zipcode, req.body.phone, req.body.openingHrs, req.body.closingHrs, logourl)
+        .then( (done) => {
+            if(done){
+                return res.json(JSON.parse('{"success": true}'));
             }
             else{
-                return res.status(404).send({picture: "Not found"})
+                console.log(done)
+                return res.status(400).send(done);
             }
         })
-        .catch(e => {
-            console.log(e)
-            return res.status(404).send({picture: "Not found"})
-        })
-    } else {
-    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+        .catch((error) => {
+            console.log(error);
+            return res.status(400).send(error);
+        });
     }
-})
+});
+
 
 getToken = function (headers) {
     if (headers && headers.authorization) {
@@ -333,46 +299,6 @@ getToken = function (headers) {
         return null;
     }
 };
-
-
-router.post('/restaurant/signup', function(req, res) {
-    if (!req.body.name || !req.body.email || !req.body.lon || !req.body.lat) {
-      res.status(400).send({msg: 'Incomplete details.'})
-    } else {
-        db.restaurantApply(req.body.name, req.body.email, req.body.lon, req.body.lat)
-        .then( (done) => {
-            if(done){
-                res.json(JSON.parse('{"success": true}'));
-            }
-            else{
-                console.log(done)
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(400).send(error);
-        });
-    }
-});
-
-router.get('/admin/restaurant-applications', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if (token) {
-        if (req.user.role === '2'){
-            db.getRestaurantApplications()
-                .then(resolve => {
-                    return res.status(200).send(resolve)
-                })
-                .catch(e => {
-                    console.log(e)
-                    return res.status(403).send({success: false, msg: e})
-                })
-        }
-    } else{
-        return res.status(200).send({success: false, msg: 'Unauthorized'})
-    }
-        
-});
 
 
 module.exports = router;

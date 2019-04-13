@@ -30,7 +30,7 @@ client.setup = function () {
             modified timestamp
             );
             drop trigger if exists add_created_timestamp on users;
-            drop trigger if exists add_modified_timestamp on users; 
+            drop trigger if exists add_modified_timestamp on users;
 
             CREATE OR REPLACE FUNCTION created_timestamp() 
             RETURNS TRIGGER AS $$
@@ -88,8 +88,8 @@ client.setup = function () {
                 phone varchar(10) NOT NULL,
                 address varchar(1000) NOT NULL,
                 logourl varchar(500),
-                openingHrs time(4),
-                closingHrs time(4),
+                openingHrs time NOT NULL,
+                closingHrs time NOT NULL,
                 status varchar(1) default 'P',
                 PRIMARY KEY (id)
             );
@@ -193,24 +193,27 @@ client.setup = function () {
                 FOREIGN KEY (orderId) REFERENCES orders(id)
                 
             );
-
-            drop trigger if exists update_tracking on deliveryAgent;
-
-            CREATE OR REPLACE FUNCTION update_tracking()
+            
+            CREATE OR REPLACE FUNCTION clear_restAppl() 
             RETURNS TRIGGER AS $$
             BEGIN
-                SELECT id into @idd FROM orders WHERE del_username = OLD.username;
-                UPDATE tracking lat = NEW.lat where orderId = @idd;
-                UPDATE tracking lon = NEW.lon where orderId = @idd;
-                RETURN NEW;
+                IF NEW.status = 'A' THEN
+                INSERT INTO restaurantProfile
+                VALUES (CONCAT('restaurant',NEW.id), NEW.name, NEW.email, NEW.lon, NEW.lat, NEW.zipcode, NEW.phone, NEW.address, NEW.logourl, NEW.openingHrs, NEW.closingHrs);
+                INSERT INTO users(username,email,password,role)
+                VALUES (CONCAT('restaurant',NEW.id),NEW.email,MD5(random()::text),'3');
+                END IF;
+                DELETE FROM restaurantApplications WHERE email=NEW.email;
+                RETURN NEW; 
             END;
             $$ language 'plpgsql';
+            
+            drop trigger if exists update_restAppl on restaurantApplications;
 
-            create trigger update_tracking
-            after update on deliveryAgent
+            create trigger update_restAppl
+            after update on restaurantApplications
             for each row
-            execute procedure update_tracking;
-
+            execute procedure clear_restAppl();
             `,
     }
     this.query(query)
@@ -239,10 +242,13 @@ client.setActive = users.setActive;
 
 client.insertNewToken = verification.insertNewToken;
 client.verifyToken = verification.verifyToken;
-client.verified = verification.verified;
+client.deleteToken = verification.deleteToken;
 
 client.restaurantApply = restaurants.restaurantApply;
 client.getRestaurantApplications = restaurants.getRestaurantApplications;
+client.getRestaurantApplicationByEmail = restaurants.getRestaurantApplicationByEmail;
+client.getRestaurantApplicationByID = restaurants.getRestaurantApplicationByID;
+client.updateRestaurantApplication = restaurants.updateRestaurantApplication;
 
 client.orders = orders.addOrder;
 client.orders = orders.deleteOrder;
