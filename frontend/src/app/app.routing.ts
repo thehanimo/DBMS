@@ -17,6 +17,8 @@ import { from } from 'rxjs';
 import { RestaurantRegisterComponent } from './landing/restaurant-register';
 import { SingleRestoApplicationComponent } from './admin/single-resto-application/single-resto-application.component';
 import { RestaurantComponent } from './restaurant/restaurant.component';
+import { ChangePasswordComponent as RChangePasswordComponent} from './restaurant/change-password/change-password.component'
+
 
 const appRoutes: Routes = [
     {
@@ -56,6 +58,7 @@ const appRoutes: Routes = [
         component: RestaurantComponent,
         canActivate: [AuthGuard],
         children: [
+            {path: 'changePassword', component: RChangePasswordComponent},
         ],
         data: { roles: ['3'] },
     },

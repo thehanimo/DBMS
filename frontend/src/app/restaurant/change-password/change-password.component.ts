@@ -36,7 +36,7 @@ export class ChangePasswordComponent implements OnInit {
       });
       
       // get return url from route parameters or default to '/'
-      this.returnUrl = '/home';
+      this.returnUrl = '/restaurant';
   }
 
   // convenience getter for easy access to form fields
