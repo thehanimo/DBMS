@@ -77,4 +77,32 @@ self.updateRestaurantApplication = function(email, status){
         .catch(e => reject(e))
     });
 }
+
+self.getRestaurantProfiles = function() {
+    client = this;
+    return new Promise(function(resolve, reject){
+        const query = {
+            text:   `select * from restaurantProfile`
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows)
+        })
+        .catch(e => reject(e))
+    });
+}
+
+self.getRestaurantItems = function(id) {
+    client = this;
+    return new Promise( function(resolve, reject){
+        const query = {
+            text:   `select * from item where restid='restaurant${id}'`
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows)
+        })
+        .catch(e => reject(e))
+    });
+}
 module.exports = self;

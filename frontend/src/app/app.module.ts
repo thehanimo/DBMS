@@ -25,6 +25,8 @@ import { RestaurantApplicationsComponent } from './admin/restaurant-applications
 import { SingleRestoApplicationComponent } from './admin/single-resto-application/single-resto-application.component';
 import { RestaurantComponent } from './restaurant/restaurant.component';
 import { ChangePasswordComponent as RChangePasswordComponent} from './restaurant/change-password/change-password.component'
+import { UserLandingComponent } from './customer/user-landing';
+import { RestaurantDetailComponent } from './restaurant/restaurant-detail/restaurant-detail.component';
 
 @NgModule({
   imports: [
@@ -50,6 +52,8 @@ import { ChangePasswordComponent as RChangePasswordComponent} from './restaurant
     SingleRestoApplicationComponent,
     RestaurantComponent,
     RChangePasswordComponent,
+    UserLandingComponent,
+    RestaurantDetailComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

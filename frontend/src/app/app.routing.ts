@@ -9,6 +9,8 @@ import { VerificationComponent } from './landing/verification';
 import { ChangePasswordComponent } from './customer/change-password';
 import { ProfileComponent } from './customer/profile';
 import { ForgotPasswordComponent } from './landing/forgot-password';
+import { UserLandingComponent } from './customer/user-landing';
+import { RestaurantDetailComponent } from './restaurant/restaurant-detail';
 
 import { AdminComponent } from './admin'
 import { RestaurantApplicationsComponent } from './admin/restaurant-applications'
@@ -27,6 +29,8 @@ const appRoutes: Routes = [
         children: [
             {path: 'changePassword', component: ChangePasswordComponent},
             {path: 'profile', component: ProfileComponent},
+            {path: 'landing', component: UserLandingComponent},
+            {path: 'restaurant/:id', component: RestaurantDetailComponent},
         ],
         canActivate: [AuthGuard],
         data: { roles: ['1'] },

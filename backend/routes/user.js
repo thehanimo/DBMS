@@ -148,7 +148,54 @@ router.post('/picture', passport.authenticate('jwt', { session: false}), functio
   } else {
   return res.status(403).send({success: false, msg: 'Unauthorized.'});
   }
-})
+});
+
+router.get('/landing', function(req, res) {
+    db.getRestaurantProfiles()
+    .then(resolve => {
+        if(resolve.logourl){
+            fs.readFile(resolve.logourl, function read(err, data) {
+                if (err) {
+                    return res.status(403).send({success: false, msg: 'Unauthorized.'})
+                }
+                resolve.logo = data.toString();
+                delete resolve["logourl"]
+                return res.status(200).send(resolve);
+            });
+        }
+        else {
+            return res.status(200).send(resolve);
+        }
+    })
+    .catch(e => {
+        console.log(e);
+        return res.status(403).send({success: false, msg: 'Unauthorized.'})
+    })
+});
+
+router.get('/restaurant/:id', function(req, res) {
+    console.log(req.params.id);
+    db.getRestaurantItems(req.params.id)
+    .then(resolve => {
+        if(resolve.photourl){
+            fs.readFile(resolve.photourl, function read(err, data) {
+                if (err) {
+                    return res.status(403).send({success: false, msg: 'Unauthorized.'})
+                }
+                resolve.photo = data.toString();
+                delete resolve["photourl"]
+                return res.status(200).send(resolve);
+            });
+        }
+        else {
+            return res.status(200).send(resolve);
+        }
+    })
+    .catch(e => {
+        console.log(e);
+        return res.status(403).send({success: false, msg: 'Unauthorized.'})
+    })
+});
 
 
 getToken = function (headers) {
