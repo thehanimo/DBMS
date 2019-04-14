@@ -106,7 +106,7 @@ export class RestaurantRegisterComponent implements OnInit {
         })
       };
     }
-}
+  }
 
 
   onSubmit() {
