@@ -78,6 +78,16 @@ self.updateRestaurantApplication = function(email, status){
     });
 }
 
+self.getRestaurantProfiles = function() {
+    client = this;
+    return new Promise(function(resolve, reject){
+        const query = {
+            text:   `select * from restaurantProfile`
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows)
+          
 self.getRestaurantCategory = function(username, catName){
     client = this;
     return new Promise(function(resolve,reject){
@@ -94,6 +104,20 @@ self.getRestaurantCategory = function(username, catName){
     });
 }
 
+self.getRestaurantItems = function(id) {
+    client = this;
+    return new Promise( function(resolve, reject){
+        const query = {
+            text:   `select * from item where restid='restaurant${id}'`
+          
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows)
+        })
+        .catch(e => reject(e))
+    });
+}
 
 self.addRestaurantCategory = function(username, catName){
     client = this;
@@ -118,6 +142,7 @@ self.getRestaurantCategories = function(username){
             text:   `select id,categoryName from category
                     where rest_username = $1`,
             values: [username],
+          
         }
         client.query(query)
         .then(res => {
