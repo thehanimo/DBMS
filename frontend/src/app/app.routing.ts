@@ -18,6 +18,9 @@ import { RestaurantRegisterComponent } from './landing/restaurant-register';
 import { SingleRestoApplicationComponent } from './admin/single-resto-application/single-resto-application.component';
 import { RestaurantComponent } from './restaurant/restaurant.component';
 import { ChangePasswordComponent as RChangePasswordComponent} from './restaurant/change-password/change-password.component'
+import { MenuComponent } from './restaurant/menu/menu.component';
+import { CategoryComponent } from './restaurant/menu/category/category.component';
+import { ItemComponent } from './restaurant/menu/item/item.component';
 
 
 const appRoutes: Routes = [
@@ -59,6 +62,13 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard],
         children: [
             {path: 'changePassword', component: RChangePasswordComponent},
+            {path: 'menu',
+            component: MenuComponent,
+            children: [
+                {path: 'category', component: CategoryComponent},
+                {path: 'item', component: ItemComponent},
+            ]
+            },
         ],
         data: { roles: ['3'] },
     },

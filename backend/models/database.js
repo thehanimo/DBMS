@@ -119,7 +119,7 @@ client.setup = function() {
             
             CREATE TABLE if not exists category (
                 id serial,
-                categoryName varchar(255),
+                categoryName varchar(255) UNIQUE,
                 rest_username varchar(255),
                 PRIMARY KEY (id),
                 FOREIGN KEY (rest_username) REFERENCES restaurantProfile (username)
@@ -228,6 +228,11 @@ client.getRestaurantApplications = restaurants.getRestaurantApplications;
 client.getRestaurantApplicationByEmail = restaurants.getRestaurantApplicationByEmail;
 client.getRestaurantApplicationByID = restaurants.getRestaurantApplicationByID;
 client.updateRestaurantApplication = restaurants.updateRestaurantApplication;
+client.getRestaurantCategory = restaurants.getRestaurantCategory;
+client.addRestaurantCategory = restaurants.addRestaurantCategory;
+client.getRestaurantCategories = restaurants.getRestaurantCategories;
+client.getRestaurantItem = restaurants.getRestaurantItem;
+client.addRestaurantItem = restaurants.addRestaurantItem;
 
 client.trackOrder = tracking.trackOrder;
 client.updateLocation = deliveryAgent.updateLocation;

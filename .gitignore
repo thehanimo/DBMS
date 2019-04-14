@@ -1,2 +1,6 @@
 /backend/models/logos/*
 /backend/models/pictures/*
+/backend/models/items/*
+!/backend/models/items/.gitkeep
+!/backend/models/pictures/.gitkeep
+!/backend/models/logos/.gitkeep
