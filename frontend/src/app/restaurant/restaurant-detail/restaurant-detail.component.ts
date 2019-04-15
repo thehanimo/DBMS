@@ -12,7 +12,7 @@ import { UserService } from '@/_services';
 })
 export class RestaurantDetailComponent implements OnInit {
 
-  items: MenuItems[];
+  items: MenuItems;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,7 +25,7 @@ export class RestaurantDetailComponent implements OnInit {
   }
 
   getRestaurantItems(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('resname');
     this.userService.getRestaurantItems(id)
       .subscribe(items => this.items = items);
   }

@@ -14,7 +14,7 @@ export class UserLandingComponent implements OnInit {
 
   returnUrl: string;
   error = '';
-  restaurants: RestaurantProfile[];
+  restaurants: RestaurantProfile;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +28,9 @@ export class UserLandingComponent implements OnInit {
 
   getRestaurants(): void {
     this.userService.getRestaurantProfiles()
-      .subscribe(restaurants => this.restaurants = restaurants);
+      .subscribe(restaurants => {
+        this.restaurants = restaurants
+        console.log(this.restaurants)
+      });
   }
 }

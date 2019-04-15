@@ -2,9 +2,9 @@
 <ul class="restaurants">
   <li *ngFor="let restaurant of restaurants">
     <div class="logo">
-      <img src={{restaurant.logourl}} />
+      <img src={{restaurant.logo}} height="100px" width="100px"/>
     </div>
-    <a routerLink="/home/restaurant/{{restaurant.id}}">
+    <a [routerLink]="['../restaurant/', restaurant.username]">
       <span class="badge">{{restaurant.name}}</span>
     </a>
     <br>
