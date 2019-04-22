@@ -249,6 +249,13 @@ client.getRestaurantApplications = restaurants.getRestaurantApplications;
 client.getRestaurantApplicationByEmail = restaurants.getRestaurantApplicationByEmail;
 client.getRestaurantApplicationByID = restaurants.getRestaurantApplicationByID;
 client.updateRestaurantApplication = restaurants.updateRestaurantApplication;
+client.getRestaurantProfiles = restaurants.getRestaurantProfiles;
+client.getRestaurantItems = restaurants.getRestaurantItems;
+client.getRestaurantCategory = restaurants.getRestaurantCategory;
+client.addRestaurantCategory = restaurants.addRestaurantCategory;
+client.getRestaurantCategories = restaurants.getRestaurantCategories;
+client.getRestaurantItem = restaurants.getRestaurantItem;
+client.addRestaurantItem = restaurants.addRestaurantItem;
 
 client.orders = orders.addOrder;
 client.orders = orders.deleteOrder;

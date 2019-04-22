@@ -9,16 +9,16 @@ import { AuthenticationService } from '@/_services';
 import * as customValidators from '@/custom-validators';
 
 @Component({
-  selector: 'app-change-password',
-  templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.css',
-            '../../admin/assets/css/bootstrap.min.css',
-            '../../admin/assets/css/now-ui-dashboard.css?v=1.3.0',
-            '../../admin/assets/demo/demo.css',                
+  selector: 'app-category',
+  templateUrl: './category.component.html',
+  styleUrls: ['./category.component.css',
+  '../../../admin/assets/css/bootstrap.min.css',
+  '../../../admin/assets/css/now-ui-dashboard.css?v=1.3.0',
+  '../../../admin/assets/demo/demo.css',                
 ]
 })
-export class ChangePasswordComponent implements OnInit {
-  changePasswordForm: FormGroup;
+export class CategoryComponent implements OnInit {
+addCategoryForm: FormGroup;
   loading = false;
   submitted = false;
   returnUrl: string;
@@ -34,30 +34,32 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.changePasswordForm = this.formBuilder.group({
-          password1: ['', [Validators.required,customValidators.passwordValidator()]],
-          password2: ['', customValidators.matchOtherValidator('password1')],
+      this.addCategoryForm = this.formBuilder.group({
+          name: ['', [Validators.required,customValidators.nameValidator()]],
       });
       
       // get return url from route parameters or default to '/'
-      this.returnUrl = '/restaurant';
+      this.returnUrl = '/restaurant/menu';
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.changePasswordForm.controls; }
+  get f() { return this.addCategoryForm.controls; }
 
   onSubmit() {
       this.submitted = true;
-      if (this.changePasswordForm.invalid) {
+      if (this.addCategoryForm.invalid) {
           return;
       }
-      var password = this.f.password1.value;
-      this.http.post(`http://localhost:3000/user/changePassword`, {password})
+      var catName = this.f.name.value;
+      this.http.post(`http://localhost:3000/restaurant/addCategory`, {catName})
       .pipe(first())
           .subscribe(
               data => {
                   if (data){
                     this.router.navigate([this.returnUrl]);
+                    return;
+                  } else { 
+                    this.f.name.setErrors({'nametakenValidator': true})
                     return;
                   }
               },
@@ -67,10 +69,6 @@ export class ChangePasswordComponent implements OnInit {
                   return;
               }
           );
-  }
-  logout() {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
   }
 
 }

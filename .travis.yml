@@ -1,0 +1,30 @@
+language: node_js
+node_js:
+  - "10"
+dist: trusty
+
+cache: npm
+
+sudo: false
+
+services:
+  - postgresql
+
+install:
+  - cd backend/
+  - npm install
+  - cd ../frontend
+  - npm install
+
+branches:
+  only:
+  - master
+
+before_script:
+  - npm install -g @angular/cli
+  - psql -c "CREATE DATABASE db;" -U postgres
+  - psql -c "CREATE USER dbms WITH PASSWORD 'password';" -U postgres
+  - psql -c "GRANT ALL PRIVILEGES ON DATABASE db TO dbms;" -U postgres
+
+script: 'true'
+

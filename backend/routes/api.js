@@ -13,7 +13,7 @@ const db = require('../models/database');
 
 router.post('/signup', function(req, res) {
     if (!req.body.username || !req.body.password || !req.body.email) {
-      res.status(400).send({msg: 'Incomplete details.'})
+      return res.status(400).send({msg: 'Incomplete details.'})
     } else {
         db.insertUser(req.body.username,req.body.password,req.body.email)
             .then((user) =>{
@@ -30,20 +30,20 @@ router.post('/signup', function(req, res) {
                             }
                     });
                     var mailOptions = { from: 'no-reply@yourwebapplication.com', to: req.body.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: ' + req.headers.origin + '\/confirmation\/' + token + '.\n' };
-                    transporter.sendMail(mailOptions, function (err) {
-                        if (err) { return res.status(500).send({ msg: err.message }); }
-                    });
-                    res.json(JSON.parse('{"success": true}'));
+                    // transporter.sendMail(mailOptions, function (err) {
+                    //     if (err) { return res.status(500).send({ msg: err.message }); }
+                    // });
+                    return res.json(JSON.parse('{"success": true}'));
                 })
                 .catch((error) => {
                     console.log(error);
-                    res.status(400).send(error);
+                    return res.status(400).send(error);
                 });
                 
             })
             .catch((error) => {
                 console.log(error);
-                res.status(400).send(error);
+                 return res.status(400).send(error);
             });
     }
 });
@@ -76,10 +76,10 @@ router.post('/iforgot', function(req, res) {
                 })
                 .catch((error) => {
                     console.log(error);
-                    res.status(400).send(error);
+                    return res.status(400).send(error);
                 });
             } else {
-                res.json(JSON.parse('{"success": true}'));
+                return res.json(JSON.parse('{"success": true}'));
             }
         })
     }
@@ -108,16 +108,16 @@ router.post('/confirm', function(req, res) {
                 jwt.verify(token, 'nodeauthsecret', function(err, data){
                     //console.log(err, data);
                 })
-                res.json(JSON.parse('{"success": true, "token": "JWT ' + token + '", ' + JSON.stringify(user).slice(1)));
+                return res.json(JSON.parse('{"success": true, "token": "JWT ' + token + '", ' + JSON.stringify(user).slice(1)));
             })
             .catch((error) =>{
                 console.log(error)
-                res.status(400).send(error)
+                return res.status(400).send(error)
             });      
         })
         .catch((error) =>{
             console.log(error)
-            res.status(400).send(error)
+            return res.status(400).send(error)
         });      
 });
 
@@ -135,9 +135,9 @@ router.post('/signin', function(req, res) {
                     jwt.verify(token, 'nodeauthsecret', function(err, data){
                         //console.log(err, data);
                     })
-                    res.json(JSON.parse('{"success": true, "token": "JWT ' + token + '", ' + JSON.stringify(user).slice(1)));
+                    return res.json(JSON.parse('{"success": true, "token": "JWT ' + token + '", ' + JSON.stringify(user).slice(1)));
                 } else {
-                    res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+                    return res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
                 }
             })
         })
@@ -261,7 +261,7 @@ router.post('/user', passport.authenticate('jwt', { session: false}), function(r
 
 router.post('/restaurant/signup', function(req, res) {
     if (!req.body.name || !req.body.email || !req.body.lon || !req.body.lat || !req.body.address || !req.body.zipcode || !req.body.phone || !req.body.openingHrs || !req.body.closingHrs || !req.body.logo) {
-      res.status(400).send({msg: 'Incomplete details.'})
+      return res.status(400).send({msg: 'Incomplete details.'})
     } else {
         var logourl = __dirname + "/../models/logos/" + crypto.createHash('md5').update(req.body.email).digest('hex');
         fs.writeFile(logourl, req.body.logo, function(err) {
