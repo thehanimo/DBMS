@@ -87,6 +87,10 @@ self.getRestaurantProfiles = function() {
         client.query(query)
         .then(res => {
             resolve(res.rows)
+        })
+        .catch(e => reject(e))
+    });
+}
           
 self.getRestaurantCategory = function(username, catName){
     client = this;
@@ -108,7 +112,7 @@ self.getRestaurantItems = function(id) {
     client = this;
     return new Promise( function(resolve, reject){
         const query = {
-            text:   `select * from item where restid='restaurant${id}'`
+            text:   `select * from item where restid='${id}'`
           
         }
         client.query(query)

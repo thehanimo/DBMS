@@ -17,7 +17,7 @@ export class VerificationComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
   ) { 
-    this.returnUrl = '/'; 
+    this.returnUrl = '/restaurant';
   }
 
   ngOnInit() {

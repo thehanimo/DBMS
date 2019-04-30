@@ -119,7 +119,7 @@ client.setup = function() {
             
             CREATE TABLE if not exists category (
                 id serial,
-                categoryName varchar(255) UNIQUE,
+                categoryName varchar(255),
                 rest_username varchar(255),
                 PRIMARY KEY (id),
                 FOREIGN KEY (rest_username) REFERENCES restaurantProfile (username)

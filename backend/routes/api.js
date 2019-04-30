@@ -30,9 +30,9 @@ router.post('/signup', function(req, res) {
                             }
                     });
                     var mailOptions = { from: 'no-reply@yourwebapplication.com', to: req.body.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: ' + req.headers.origin + '\/confirmation\/' + token + '.\n' };
-                    transporter.sendMail(mailOptions, function (err) {
-                        if (err) { return res.status(500).send({ msg: err.message }); }
-                    });
+                    // transporter.sendMail(mailOptions, function (err) {
+                    //     if (err) { return res.status(500).send({ msg: err.message }); }
+                    // });
                     return res.json(JSON.parse('{"success": true}'));
                 })
                 .catch((error) => {

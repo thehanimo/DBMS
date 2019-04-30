@@ -150,46 +150,41 @@ router.post('/picture', passport.authenticate('jwt', { session: false}), functio
   }
 });
 
-router.get('/landing', function(req, res) {
-    db.getRestaurantProfiles()
-    .then(resolve => {
-        if(resolve.logourl){
-            fs.readFile(resolve.logourl, function read(err, data) {
-                if (err) {
-                    return res.status(403).send({success: false, msg: 'Unauthorized.'})
+router.get('/landing', passport.authenticate('jwt', { session: false}), function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        db.getRestaurantProfiles()
+        .then(resolve => {
+            for(var element in resolve){
+                if(resolve[element].logourl){
+                    var data = fs.readFileSync(resolve[element].logourl)
+                    resolve[element].logo = data.toString();
+                    delete resolve[element]["logourl"];
                 }
-                resolve.logo = data.toString();
-                delete resolve["logourl"]
-                return res.status(200).send(resolve);
-            });
-        }
-        else {
+            };
             return res.status(200).send(resolve);
-        }
-    })
-    .catch(e => {
-        console.log(e);
-        return res.status(403).send({success: false, msg: 'Unauthorized.'})
-    })
+        })
+        .catch(e => {
+            console.log(e);
+            return res.status(403).send({success: false, msg: 'Unauthorized.'})
+        })
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized.'});
+    }
 });
 
 router.get('/restaurant/:id', function(req, res) {
     console.log(req.params.id);
     db.getRestaurantItems(req.params.id)
     .then(resolve => {
-        if(resolve.photourl){
-            fs.readFile(resolve.photourl, function read(err, data) {
-                if (err) {
-                    return res.status(403).send({success: false, msg: 'Unauthorized.'})
-                }
-                resolve.photo = data.toString();
-                delete resolve["photourl"]
-                return res.status(200).send(resolve);
-            });
-        }
-        else {
-            return res.status(200).send(resolve);
-        }
+        for(var element in resolve){
+            if(resolve[element].photourl){
+                var data = fs.readFileSync(resolve[element].photourl)
+                resolve[element].photo = data.toString();
+                delete resolve[element]["photourl"];
+            }
+        };
+        return res.status(200).send(resolve);
     })
     .catch(e => {
         console.log(e);

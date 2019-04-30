@@ -33,7 +33,7 @@ const appRoutes: Routes = [
             {path: 'changePassword', component: ChangePasswordComponent},
             {path: 'profile', component: ProfileComponent},
             {path: 'landing', component: UserLandingComponent},
-            {path: 'restaurant/:id', component: RestaurantDetailComponent},
+            {path: 'restaurant/:resname', component: RestaurantDetailComponent},
         ],
         canActivate: [AuthGuard],
         data: { roles: ['1'] },
