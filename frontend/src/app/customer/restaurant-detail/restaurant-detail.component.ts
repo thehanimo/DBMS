@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -11,10 +12,22 @@ import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-restaurant-detail',
   templateUrl: './restaurant-detail.component.html',
-  styleUrls: ['./restaurant-detail.component.css']
+  styleUrls: ['./restaurant-detail.component.css',
+              '../assets/css/open-iconic-bootstrap.min.css',
+              "../assets/css/animate.css",
+              // "./assets/css/owl.carousel.min.css",
+              "../assets/css/owl.theme.default.min.css",
+              "../assets/css/magnific-popup.css",
+              "../assets/css/aos.css",
+              "../assets/css/ionicons.min.css",
+              "../assets/css/bootstrap-datepicker.css",
+              "../assets/css/jquery.timepicker.css",
+              "../assets/css/flaticon.css",
+              "../assets/css/icomoon.css",
+              "../assets/css/style.css"
+]
 })
 export class RestaurantDetailComponent implements OnInit {
-
   items: MenuItems;
   cart: Cart [] = [];
   currentUser: User;
@@ -42,6 +55,10 @@ export class RestaurantDetailComponent implements OnInit {
       .subscribe(items => this.items = items);
   }
 
+  logout() {
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
+  }
   initialiseCart(id, op): void {
     var i = 0;
     for (var item in this.items) {
@@ -73,9 +90,14 @@ export class RestaurantDetailComponent implements OnInit {
 
   createOrder(): void {
     console.log("Hi");
-    var orderid = this.order[0].id + 1 ;
+    
+    if(this.order[0] !== undefined){
+      var orderid = this.order[0].id + 1 ;
+    } else {
+      var orderid = 1 ;
+    }
     console.log(orderid);
-    this.userService.createOrder(orderid, this.currentUser.username, 'restaurant19', '13.591471582246442', '80.03223359606993', 'shyam')
+    this.userService.createOrder(orderid, this.currentUser.username, 'restaurant19', '13.591471582246442', '80.03223359606993', 'Mira')
     .pipe(first())
     .subscribe(
       data => {
@@ -102,5 +124,4 @@ export class RestaurantDetailComponent implements OnInit {
       }
     }
   }
-
 }
