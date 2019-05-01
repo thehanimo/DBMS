@@ -82,7 +82,7 @@ self.getRestaurantProfiles = function() {
     client = this;
     return new Promise(function(resolve, reject){
         const query = {
-            text:   `select * from restaurantProfile`
+            text:   `select * from restaurantProfile limit 15`
         }
         client.query(query)
         .then(res => {
