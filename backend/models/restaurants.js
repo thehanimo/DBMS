@@ -188,4 +188,50 @@ self.addRestaurantItem = function(username, itemName,price,desc,catID,pictureurl
     });
 }
 
+self.addOrderItem = function(orderID, itemID, quantity){
+    client = this;
+    return new Promise(function(resolve, reject){
+        const query = {
+            text:   `insert into orderitem(orderid, itemid, quantity)
+                    values($1,$2,$3) returning *`,
+            values: [orderID, itemID, quantity],
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows[0])
+        })
+        .catch(e => reject(e))
+    });
+}
+
+self.createOrder = function(orderID, username, restname, lat, lon, deliveryname){
+    client = this;
+    return new Promise(function(resolve, reject){
+        const query = {
+            text:   `insert into orders(id, username, rest_name, lat, lon, del_username)
+                    values($1,$2,$3,$4,$5,$6) returning *`,
+            values: [orderID, username, restname, lat, lon, deliveryname],
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows[0])
+        })
+        .catch(e => reject(e))
+    });
+}
+
+self.getLastOrder = function(){
+    client = this;
+    return new Promise(function(resolve, reject){
+        const query = {
+            text:   `select * from orders ORDER BY id DESC LIMIT 1`,
+        }
+        client.query(query)
+        .then(res => {
+            resolve(res.rows)
+        })
+        .catch(e => reject(e))
+    });
+}
+
 module.exports = self;
